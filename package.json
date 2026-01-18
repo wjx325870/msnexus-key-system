@@ -1,0 +1,8 @@
+{
+  "name": "msnexus-key-system",
+  "version": "1.0.0",
+  "description": "Ms-Nexus License Key Server",
+  "engines": {
+    "node": ">=18.x"
+  }
+}
