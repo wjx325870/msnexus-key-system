@@ -20,7 +20,7 @@
         }
         
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
         }
         
@@ -44,7 +44,8 @@
         .stats {
             display: flex;
             justify-content: center;
-            gap: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
             margin-top: 20px;
         }
         
@@ -53,6 +54,61 @@
             padding: 15px 25px;
             border-radius: 10px;
             text-align: center;
+            min-width: 150px;
+        }
+        
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            color: #aaa;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .control-btn {
+            background: #6c8cff;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .control-btn:hover {
+            background: #5a7bff;
+            transform: translateY(-2px);
+        }
+        
+        .control-btn.export {
+            background: #4CAF50;
+        }
+        
+        .control-btn.refresh {
+            background: #2196F3;
+        }
+        
+        .control-btn.home {
+            background: #9C27B0;
+        }
+        
+        .loading {
+            text-align: center;
+            font-size: 1.2em;
+            margin: 50px 0;
+            color: #6c8cff;
         }
         
         .keys-container {
@@ -67,6 +123,17 @@
             border-radius: 15px;
             padding: 20px;
             border-left: 4px solid #6c8cff;
+            transition: transform 0.3s;
+        }
+        
+        .key-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .key-card.expired {
+            border-left-color: #f44336;
+            opacity: 0.7;
         }
         
         .key-header {
@@ -76,60 +143,102 @@
             margin-bottom: 15px;
         }
         
+        .key-status {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        
+        .key-status.active {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+        }
+        
+        .key-status.expired {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+        }
+        
         .key-value {
             font-family: 'Courier New', monospace;
             font-size: 1.3em;
             color: #4CAF50;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             word-break: break-all;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
         }
         
         .key-info {
             font-size: 0.9em;
             color: #aaa;
-            line-height: 1.5;
+            line-height: 1.6;
+            margin-bottom: 15px;
         }
         
-        .actions {
-            margin-top: 15px;
+        .key-actions {
             display: flex;
             gap: 10px;
+            margin-top: 15px;
         }
         
-        button {
-            background: #6c8cff;
+        .key-btn {
+            background: rgba(255, 255, 255, 0.1);
             color: white;
             border: none;
             padding: 8px 15px;
             border-radius: 5px;
-            cursor: pointer;
             font-size: 0.9em;
+            cursor: pointer;
+            flex: 1;
+            transition: background 0.3s;
         }
         
-        .export-btn {
-            background: #4CAF50;
-            padding: 10px 25px;
-            font-size: 1.1em;
-            display: block;
-            margin: 20px auto;
+        .key-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .key-btn.copy {
+            background: rgba(33, 150, 243, 0.3);
+        }
+        
+        .key-btn.copy:hover {
+            background: rgba(33, 150, 243, 0.5);
+        }
+        
+        .no-keys {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 50px;
+            color: #888;
+            font-size: 1.2em;
         }
         
         .footer {
             text-align: center;
             margin-top: 40px;
             color: #666;
+            font-size: 0.9em;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .loading {
-            text-align: center;
-            font-size: 1.2em;
-            margin: 50px 0;
-        }
-        
-        .timestamp {
-            font-size: 0.8em;
-            color: #888;
-            margin-top: 5px;
+        @media (max-width: 768px) {
+            .keys-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .control-btn {
+                width: 100%;
+                max-width: 300px;
+            }
         }
     </style>
 </head>
@@ -137,167 +246,300 @@
     <div class="container">
         <div class="header">
             <h1>📋 All Ms-Nexus License Keys</h1>
-            <p>All generated keys are displayed here for easy scanning</p>
+            <p>All generated keys are stored here for easy access and scanning</p>
             <div class="stats">
-                <div class="stat-box" id="totalKeys">Total: Loading...</div>
-                <div class="stat-box" id="validKeys">Valid: Loading...</div>
-                <div class="stat-box" id="lastUpdate">Updated: Just now</div>
+                <div class="stat-box">
+                    <div class="stat-value" id="totalKeys">0</div>
+                    <div class="stat-label">Total Keys</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="validKeys">0</div>
+                    <div class="stat-label">Valid Keys</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="expiredKeys">0</div>
+                    <div class="stat-label">Expired Keys</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="lastUpdate">--:--</div>
+                    <div class="stat-label">Last Updated</div>
+                </div>
             </div>
+        </div>
+        
+        <div class="controls">
+            <button class="control-btn refresh" onclick="loadKeys()">🔄 Refresh Keys</button>
+            <button class="control-btn export" onclick="exportKeys()">📥 Export as Text</button>
+            <button class="control-btn" onclick="generateNewKey()">🔑 Generate New Key</button>
+            <button class="control-btn home" onclick="goHome()">🏠 Back to Home</button>
         </div>
         
         <div class="loading" id="loading">Loading keys...</div>
         
         <div class="keys-container" id="keysContainer">
-            <!-- Keys will be inserted here by JavaScript -->
+            <!-- Keys will be loaded here by JavaScript -->
         </div>
         
-        <button class="export-btn" onclick="exportKeys()">📥 Export All Keys as Text</button>
-        
         <div class="footer">
-            <p>© 2024 Ms-Nexus System | Keys are stored in memory (reset on server restart)</p>
-            <p>This page auto-refreshes every 60 seconds</p>
+            <p>© 2024 Ms-Nexus System | Keys are stored in memory and may reset on server restart</p>
+            <p>Auto-refresh every 60 seconds | Current time: <span id="currentTime"></span></p>
         </div>
     </div>
 
     <script>
-        async function loadAllKeys() {
+        // 全局变量
+        let allKeysData = [];
+        let refreshInterval;
+        
+        // 页面加载时获取卡密
+        document.addEventListener('DOMContentLoaded', function() {
+            loadKeys();
+            startAutoRefresh();
+            updateCurrentTime();
+        });
+        
+        // 加载所有卡密
+        async function loadKeys() {
             const loading = document.getElementById('loading');
             const keysContainer = document.getElementById('keysContainer');
-            const totalElement = document.getElementById('totalKeys');
-            const validElement = document.getElementById('validKeys');
-            const updateElement = document.getElementById('lastUpdate');
+            
+            loading.style.display = 'block';
+            keysContainer.innerHTML = '';
             
             try {
-                // 从API获取所有卡密
                 const response = await fetch('/api/keys');
                 const data = await response.json();
                 
                 if (data.success) {
+                    allKeysData = data.data.allKeys || [];
+                    
                     // 更新统计
-                    totalElement.textContent = `Total: ${data.data.total}`;
-                    validElement.textContent = `Valid: ${data.data.count}`;
-                    updateElement.textContent = `Updated: ${new Date().toLocaleTimeString()}`;
+                    updateStats(data.data);
                     
-                    // 清空容器
-                    keysContainer.innerHTML = '';
+                    // 显示卡密
+                    displayKeys(allKeysData);
                     
-                    // 显示所有卡密
-                    data.data.allKeys.forEach((key, index) => {
-                        const keyCard = document.createElement('div');
-                        keyCard.className = 'key-card';
-                        
-                        const now = Math.floor(Date.now() / 1000);
-                        const isExpired = key.expiresAt < now;
-                        const isActive = key.status === 'active';
-                        
-                        // 计算剩余时间
-                        const remaining = key.expiresAt - now;
-                        const hours = Math.floor(remaining / 3600);
-                        const minutes = Math.floor((remaining % 3600) / 60);
-                        
-                        keyCard.innerHTML = `
-                            <div class="key-header">
-                                <strong>Key #${index + 1}</strong>
-                                <span style="color: ${isExpired ? '#f44336' : '#4CAF50'}">
-                                    ${isExpired ? '❌ Expired' : '✅ Active'}
-                                </span>
-                            </div>
-                            <div class="key-value">${key.licenseKey}</div>
-                            <div class="key-info">
-                                <div>Generated: ${new Date(key.generatedAt).toLocaleString()}</div>
-                                <div>Expires: ${new Date(key.expiresAt * 1000).toLocaleString()}</div>
-                                ${!isExpired ? 
-                                    `<div>Remaining: ${hours}h ${minutes}m</div>` :
-                                    '<div>Expired</div>'
-                                }
-                                <div class="timestamp">ID: ${key.id}</div>
-                            </div>
-                            <div class="actions">
-                                <button onclick="copyKey('${key.licenseKey}')">Copy</button>
-                                <button onclick="checkKey('${key.licenseKey}')">Check</button>
-                            </div>
-                        `;
-                        
-                        keysContainer.appendChild(keyCard);
-                    });
-                    
-                    loading.style.display = 'none';
+                    // 更新时间
+                    updateLastUpdate();
                 } else {
-                    loading.innerHTML = `Error: ${data.message}`;
+                    keysContainer.innerHTML = `<div class="no-keys">Error: ${data.message}</div>`;
                 }
             } catch (error) {
-                loading.innerHTML = `Error loading keys: ${error.message}`;
+                console.error('Error loading keys:', error);
+                keysContainer.innerHTML = `<div class="no-keys">Error loading keys: ${error.message}</div>`;
+            } finally {
+                loading.style.display = 'none';
             }
         }
         
-        function copyKey(key) {
+        // 显示卡密
+        function displayKeys(keys) {
+            const keysContainer = document.getElementById('keysContainer');
+            
+            if (keys.length === 0) {
+                keysContainer.innerHTML = `<div class="no-keys">No keys generated yet. Generate your first key!</div>`;
+                return;
+            }
+            
+            // 按生成时间排序（最新的在前面）
+            const sortedKeys = [...keys].sort((a, b) => b.id - a.id);
+            
+            // 创建卡密卡片
+            sortedKeys.forEach((key, index) => {
+                const now = Math.floor(Date.now() / 1000);
+                const isExpired = key.expiresAt < now;
+                const isActive = key.status === 'active';
+                
+                // 计算剩余时间
+                const remaining = key.expiresAt - now;
+                const hours = Math.floor(remaining / 3600);
+                const minutes = Math.floor((remaining % 3600) / 60);
+                
+                const keyCard = document.createElement('div');
+                keyCard.className = `key-card ${isExpired ? 'expired' : ''}`;
+                
+                keyCard.innerHTML = `
+                    <div class="key-header">
+                        <strong>Key #${sortedKeys.length - index}</strong>
+                        <span class="key-status ${isExpired ? 'expired' : 'active'}">
+                            ${isExpired ? '❌ Expired' : '✅ Active'}
+                        </span>
+                    </div>
+                    <div class="key-value">${key.licenseKey}</div>
+                    <div class="key-info">
+                        <div><strong>Generated:</strong> ${key.generatedAt}</div>
+                        <div><strong>Expires:</strong> ${key.expiresAtReadable}</div>
+                        ${!isExpired ? 
+                            `<div><strong>Remaining:</strong> ${hours}h ${minutes}m</div>` :
+                            '<div><strong>Status:</strong> Expired</div>'
+                        }
+                        <div><strong>ID:</strong> ${key.id}</div>
+                    </div>
+                    <div class="key-actions">
+                        <button class="key-btn copy" onclick="copySingleKey('${key.licenseKey}')">Copy</button>
+                        <button class="key-btn" onclick="checkKeyDetails('${key.licenseKey}')">Details</button>
+                        ${!isExpired ? 
+                            `<button class="key-btn" onclick="useKey('${key.licenseKey}')">Use</button>` :
+                            ''
+                        }
+                    </div>
+                `;
+                
+                keysContainer.appendChild(keyCard);
+            });
+        }
+        
+        // 更新统计信息
+        function updateStats(data) {
+            const totalKeys = data.totalCount || 0;
+            const validKeys = data.validCount || 0;
+            const expiredKeys = totalKeys - validKeys;
+            
+            document.getElementById('totalKeys').textContent = totalKeys;
+            document.getElementById('validKeys').textContent = validKeys;
+            document.getElementById('expiredKeys').textContent = expiredKeys;
+        }
+        
+        // 更新最后更新时间
+        function updateLastUpdate() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('lastUpdate').textContent = timeString;
+        }
+        
+        // 更新当前时间
+        function updateCurrentTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('currentTime').textContent = timeString;
+            
+            setTimeout(updateCurrentTime, 1000);
+        }
+        
+        // 复制单个卡密
+        function copySingleKey(key) {
             navigator.clipboard.writeText(key).then(() => {
                 alert(`Copied: ${key}`);
+            }).catch(err => {
+                alert('Failed to copy. Please copy manually.');
             });
         }
         
-        function checkKey(key) {
-            const now = Math.floor(Date.now() / 1000);
-            const allKeys = document.querySelectorAll('.key-value');
-            
-            allKeys.forEach(el => {
-                if (el.textContent === key) {
-                    el.style.animation = 'none';
-                    setTimeout(() => {
-                        el.style.animation = 'flash 1s';
-                    }, 10);
-                }
-            });
-        }
-        
-        function exportKeys() {
-            // 获取所有卡密并导出为文本
-            fetch('/api/keys')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        let text = '=== Ms-Nexus All License Keys ===\n';
-                        text += `Export Date: ${new Date().toISOString()}\n`;
-                        text += `Total Keys: ${data.data.total}\n`;
-                        text += `Valid Keys: ${data.data.count}\n\n`;
-                        
-                        data.data.allKeys.forEach((key, index) => {
-                            const expired = key.expiresAt < Math.floor(Date.now() / 1000);
-                            text += `${index + 1}. ${key.licenseKey}\n`;
-                            text += `   Status: ${expired ? 'EXPIRED' : 'ACTIVE'}\n`;
-                            text += `   Generated: ${key.generatedAt}\n`;
-                            text += `   Expires: ${key.expiresAtReadable}\n\n`;
-                        });
-                        
-                        // 创建下载链接
-                        const blob = new Blob([text], { type: 'text/plain' });
-                        const url = URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = `msnexus-keys-${new Date().toISOString().split('T')[0]}.txt`;
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                        URL.revokeObjectURL(url);
-                    }
-                });
-        }
-        
-        // 页面加载时获取卡密
-        loadAllKeys();
-        
-        // 每60秒自动刷新
-        setInterval(loadAllKeys, 60000);
-        
-        // 添加CSS动画
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes flash {
-                0%, 100% { background-color: transparent; }
-                50% { background-color: rgba(76, 175, 80, 0.3); }
+        // 检查卡密详情
+        function checkKeyDetails(key) {
+            const keyData = allKeysData.find(k => k.licenseKey === key);
+            if (keyData) {
+                const now = Math.floor(Date.now() / 1000);
+                const isExpired = keyData.expiresAt < now;
+                const remaining = keyData.expiresAt - now;
+                const hours = Math.floor(remaining / 3600);
+                const minutes = Math.floor((remaining % 3600) / 60);
+                
+                alert(`Key Details:\n\n` +
+                      `License Key: ${keyData.licenseKey}\n` +
+                      `Generated: ${keyData.generatedAt}\n` +
+                      `Expires: ${keyData.expiresAtReadable}\n` +
+                      `Status: ${isExpired ? 'Expired' : 'Active'}\n` +
+                      `${!isExpired ? `Remaining: ${hours}h ${minutes}m\n` : ''}` +
+                      `ID: ${keyData.id}`);
             }
-        `;
-        document.head.appendChild(style);
+        }
+        
+        // 使用卡密
+        function useKey(key) {
+            // 这里可以添加使用卡密的逻辑
+            alert(`Using key: ${key}\n\nThis key is now marked as used.`);
+            
+            // 模拟标记卡密为已使用
+            const keyIndex = allKeysData.findIndex(k => k.licenseKey === key);
+            if (keyIndex !== -1) {
+                allKeysData[keyIndex].status = 'used';
+                // 重新加载以更新状态
+                setTimeout(loadKeys, 1000);
+            }
+        }
+        
+        // 导出卡密为文本
+        function exportKeys() {
+            if (allKeysData.length === 0) {
+                alert('No keys to export');
+                return;
+            }
+            
+            const now = new Date();
+            let text = '=== Ms-Nexus License Keys Export ===\n';
+            text += `Export Date: ${now.toISOString()}\n`;
+            text += `Total Keys: ${allKeysData.length}\n\n`;
+            
+            // 有效卡密
+            const validKeys = allKeysData.filter(key => {
+                const isExpired = key.expiresAt < Math.floor(Date.now() / 1000);
+                return !isExpired && (key.status === 'active' || !key.status);
+            });
+            
+            text += `=== VALID KEYS (${validKeys.length}) ===\n\n`;
+            validKeys.forEach((key, index) => {
+                text += `${index + 1}. ${key.licenseKey}\n`;
+                text += `   Expires: ${key.expiresAtReadable}\n`;
+                text += `   Generated: ${key.generatedAt}\n\n`;
+            });
+            
+            // 过期卡密
+            const expiredKeys = allKeysData.filter(key => {
+                const isExpired = key.expiresAt < Math.floor(Date.now() / 1000);
+                return isExpired;
+            });
+            
+            if (expiredKeys.length > 0) {
+                text += `=== EXPIRED KEYS (${expiredKeys.length}) ===\n\n`;
+                expiredKeys.forEach((key, index) => {
+                    text += `${index + 1}. ${key.licenseKey}\n`;
+                    text += `   Expired: ${key.expiresAtReadable}\n`;
+                    text += `   Generated: ${key.generatedAt}\n\n`;
+                });
+            }
+            
+            // 创建下载
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `msnexus-keys-${now.toISOString().split('T')[0]}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        // 生成新卡密
+        function generateNewKey() {
+            window.location.href = '/key.html';
+        }
+        
+        // 返回首页
+        function goHome() {
+            window.location.href = '/index.html';
+        }
+        
+        // 启动自动刷新
+        function startAutoRefresh() {
+            // 每60秒刷新一次
+            if (refreshInterval) clearInterval(refreshInterval);
+            refreshInterval = setInterval(loadKeys, 60000);
+        }
+        
+        // 停止自动刷新
+        function stopAutoRefresh() {
+            if (refreshInterval) clearInterval(refreshInterval);
+        }
     </script>
 </body>
 </html>
