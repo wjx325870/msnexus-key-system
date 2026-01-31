@@ -48,4 +48,348 @@
         }
         
         @keyframes twinkle {
-            0%
+            0% { opacity: 0.3; }
+            100% { opacity: 0.8; }
+        }
+        
+        .container {
+            background: rgba(15, 20, 45, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(100, 120, 255, 0.2);
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+        
+        .logo-container {
+            margin-bottom: 30px;
+        }
+        
+        .logo-img {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #6c8cff, #4a6fff);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 0 20px rgba(108, 140, 255, 0.5);
+        }
+        
+        h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #6c8cff, #b0c6ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            color: #aaa;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+        
+        .key-display-container {
+            background: rgba(30, 35, 70, 0.7);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px dashed rgba(108, 140, 255, 0.3);
+        }
+        
+        .key-label {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            color: #b0c6ff;
+        }
+        
+        .license-key {
+            font-size: 2em;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #4CAF50;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+            word-break: break-all;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+        }
+        
+        .loading {
+            color: #6c8cff;
+            font-style: italic;
+        }
+        
+        .copy-btn {
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            max-width: 200px;
+            margin: 0 auto;
+            display: block;
+        }
+        
+        .copy-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(33, 150, 243, 0.4);
+        }
+        
+        .copy-btn.copied {
+            background: linear-gradient(135deg, #4CAF50, #2E8B57);
+        }
+        
+        .copy-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .validity {
+            margin-top: 20px;
+            color: #888;
+            font-size: 0.9em;
+        }
+        
+        .note-section {
+            margin-top: 25px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            color: #aaa;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+        
+        .note-section a {
+            color: #6c8cff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .note-section a:hover {
+            text-decoration: underline;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .action-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #aaa;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 25px;
+            border-radius: 20px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .error-message {
+            color: #f44336;
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(244, 67, 54, 0.1);
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .footer {
+            margin-top: 20px;
+            color: #666;
+            font-size: 0.85em;
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .license-key {
+                font-size: 1.5em;
+            }
+            
+            .actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <div class="logo-img">M</div>
+            <h1>Your License Key</h1>
+            <p class="subtitle">Copy your key to activate Ms-Nexus</p>
+        </div>
+        
+        <div class="key-display-container">
+            <div class="key-label">Your License Key:</div>
+            <div class="license-key" id="licenseKey">
+                <span class="loading">Generating license key...</span>
+            </div>
+            <div class="validity" id="validityInfo">Valid for 23 hours from generation</div>
+        </div>
+        
+        <div class="error-message" id="errorMessage"></div>
+        
+        <button class="copy-btn" onclick="copyLicenseKey()" id="copyButton" disabled>Copy Key</button>
+        
+        <div class="note-section">
+            <strong>Important Notes:</strong><br>
+            • This script currently only supports Delta Injector<br>
+            • <a href="https://discord.com/invite/BWcHXTujG8" target="_blank">Join our Discord to help us improve 🙏</a>
+        </div>
+        
+        <div class="actions">
+            <button class="action-btn" onclick="generateNewKey()">🔄 Generate New Key</button>
+            <button class="action-btn" onclick="viewAllKeys()">📋 View All Keys</button>
+            <button class="action-btn" onclick="goHome()">🏠 Back Home</button>
+        </div>
+        
+        <div class="footer">
+            © 2024 Ms-Nexus System | Secure License Management
+        </div>
+    </div>
+
+    <script>
+        let currentKeyData = null;
+        const copyButton = document.getElementById('copyButton');
+        const licenseKeyElement = document.getElementById('licenseKey');
+        const errorMessageElement = document.getElementById('errorMessage');
+        const validityInfoElement = document.getElementById('validityInfo');
+        
+        // 页面加载时生成卡密
+        document.addEventListener('DOMContentLoaded', function() {
+            generateNewKey();
+        });
+        
+        // 生成新卡密
+        async function generateNewKey() {
+            // 重置状态
+            copyButton.disabled = true;
+            copyButton.textContent = 'Copy Key';
+            copyButton.classList.remove('copied');
+            errorMessageElement.style.display = 'none';
+            licenseKeyElement.innerHTML = '<span class="loading">Generating license key...</span>';
+            validityInfoElement.textContent = 'Valid for 23 hours from generation';
+            
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        source: 'web_page',
+                        timestamp: new Date().toISOString()
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentKeyData = data.data;
+                    
+                    // 显示卡密
+                    licenseKeyElement.innerHTML = data.data.licenseKey;
+                    
+                    // 更新过期时间信息
+                    validityInfoElement.textContent = `Valid until: ${data.data.expiresAtReadable}`;
+                    
+                    // 启用复制按钮
+                    copyButton.disabled = false;
+                    
+                    console.log('Key generated:', data.data.licenseKey);
+                } else {
+                    throw new Error(data.message || 'Failed to generate key');
+                }
+            } catch (error) {
+                console.error('Error generating key:', error);
+                showError('Failed to generate license key. Please try again.');
+                licenseKeyElement.innerHTML = '<span style="color: #f44336">Failed to generate</span>';
+            }
+        }
+        
+        // 复制卡密
+        function copyLicenseKey() {
+            if (!currentKeyData || !currentKeyData.licenseKey) {
+                showError('No key to copy');
+                return;
+            }
+            
+            const keyText = currentKeyData.licenseKey;
+            
+            navigator.clipboard.writeText(keyText).then(() => {
+                // 视觉反馈
+                copyButton.textContent = '✓ Copied!';
+                copyButton.classList.add('copied');
+                
+                setTimeout(() => {
+                    copyButton.textContent = 'Copy Key';
+                    copyButton.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Copy failed:', err);
+                showError('Copy failed. Please select and copy manually.');
+            });
+        }
+        
+        // 显示错误
+        function showError(message) {
+            errorMessageElement.textContent = message;
+            errorMessageElement.style.display = 'block';
+            
+            setTimeout(() => {
+                errorMessageElement.style.display = 'none';
+            }, 5000);
+        }
+        
+        // 查看所有卡密
+        function viewAllKeys() {
+            window.location.href = '/all-keys.html';
+        }
+        
+        // 返回首页
+        function goHome() {
+            window.location.href = '/index.html';
+        }
+    </script>
+</body>
+</html>
