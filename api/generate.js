@@ -1,10 +1,17 @@
-// 在内存中存储卡密（重启会丢失，但最简单）
-let allKeys = [];
+import { createClient } from '@supabase/supabase-js'
+
+// 内存存储（如果Supabase没配置）
+let memoryKeys = [];
 
 export default async function handler(request, response) {
   // 设置CORS
   response.setHeader('Access-Control-Allow-Origin', '*');
   response.setHeader('Content-Type', 'application/json');
+
+  // 处理预检请求
+  if (request.method === 'OPTIONS') {
+    return response.status(200).end();
+  }
 
   if (request.method !== 'POST') {
     return response.status(405).json({
@@ -22,43 +29,89 @@ export default async function handler(request, response) {
       if ((i + 1) % 4 === 0 && i !== 11) key += '-';
     }
 
-    // 2. 设置过期时间
+    // 2. 设置过期时间 (23小时)
     const now = Math.floor(Date.now() / 1000);
     const expiresAt = now + (23 * 60 * 60);
+    const expiresAtReadable = new Date(expiresAt * 1000).toLocaleString('en-US');
+    const generatedAt = new Date().toLocaleString('en-US');
 
-    // 3. 保存到内存
-    const keyData = {
-      licenseKey: key,
-      expiresAt: expiresAt,
-      expiresAtReadable: new Date(expiresAt * 1000).toISOString(),
-      generatedAt: new Date().toISOString(),
-      status: 'active',
-      id: Date.now() // 简单ID
-    };
+    // 3. 尝试保存到Supabase数据库
+    let savedToSupabase = false;
+    let supabaseError = null;
     
-    allKeys.push(keyData);
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_KEY;
     
-    // 只保留最近的100个卡密（防止内存占用过大）
-    if (allKeys.length > 100) {
-      allKeys = allKeys.slice(-100);
+    if (supabaseUrl && supabaseKey) {
+      try {
+        const supabase = createClient(supabaseUrl, supabaseKey);
+        
+        // 插入数据到license_keys表
+        const { data, error } = await supabase
+          .from('license_keys')
+          .insert([
+            {
+              license_key: key,
+              expires_at: expiresAt,
+              expires_at_readable: expiresAtReadable,
+              generated_at: generatedAt,
+              status: 'active'
+            }
+          ]);
+        
+        if (error) {
+          console.error('Supabase insert error:', error);
+          supabaseError = error.message;
+        } else {
+          savedToSupabase = true;
+          console.log('Saved to Supabase:', key);
+        }
+      } catch (supabaseError) {
+        console.error('Supabase connection error:', supabaseError);
+      }
     }
 
-    // 4. 返回成功响应
+    // 4. 也保存到内存（双重备份）
+    const memoryKeyData = {
+      licenseKey: key,
+      expiresAt: expiresAt,
+      expiresAtReadable: expiresAtReadable,
+      generatedAt: generatedAt,
+      status: 'active',
+      id: Date.now()
+    };
+    
+    memoryKeys.push(memoryKeyData);
+    
+    // 限制内存存储数量
+    if (memoryKeys.length > 100) {
+      memoryKeys = memoryKeys.slice(-100);
+    }
+
+    // 5. 返回成功响应
     return response.status(200).json({
       success: true,
-      message: 'License key generated and saved',
+      message: 'License key generated successfully',
       data: {
-        currentKey: keyData,
-        totalKeys: allKeys.length,
-        allKeys: allKeys // 返回所有卡密
+        licenseKey: key,
+        expiresAt: expiresAt,
+        expiresAtReadable: expiresAtReadable,
+        generatedAt: generatedAt,
+        storageInfo: {
+          savedToDatabase: savedToSupabase,
+          databaseError: supabaseError,
+          memoryBackup: true,
+          memoryCount: memoryKeys.length
+        },
+        timestamp: new Date().toISOString()
       }
     });
 
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Generate key error:', error);
     return response.status(500).json({
       success: false,
-      message: 'Internal server error'
+      message: 'Internal server error: ' + error.message
     });
   }
 }
