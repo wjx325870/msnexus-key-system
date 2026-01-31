@@ -289,106 +289,128 @@
     </div>
 
     <script>
-        let currentKeyData = null;
-        const copyButton = document.getElementById('copyButton');
-        const licenseKeyElement = document.getElementById('licenseKey');
-        const errorMessageElement = document.getElementById('errorMessage');
-        const validityInfoElement = document.getElementById('validityInfo');
+        let currentKeyData = null
+        const copyButton = document.getElementById('copyButton')
+        const licenseKeyElement = document.getElementById('licenseKey')
+        const errorMessageElement = document.getElementById('errorMessage')
+        const validityInfoElement = document.getElementById('validityInfo')
         
         // 页面加载时生成卡密
         document.addEventListener('DOMContentLoaded', function() {
-            generateNewKey();
-        });
+            generateNewKey()
+        })
         
         // 生成新卡密
         async function generateNewKey() {
             // 重置状态
-            copyButton.disabled = true;
-            copyButton.textContent = 'Copy Key';
-            copyButton.classList.remove('copied');
-            errorMessageElement.style.display = 'none';
-            licenseKeyElement.innerHTML = '<span class="loading">Generating license key...</span>';
-            validityInfoElement.textContent = 'Valid for 23 hours from generation';
+            copyButton.disabled = true
+            copyButton.textContent = 'Copy Key'
+            copyButton.classList.remove('copied')
+            errorMessageElement.style.display = 'none'
+            licenseKeyElement.innerHTML = '<span class="loading">Generating license key...</span>'
+            validityInfoElement.textContent = 'Valid for 23 hours from generation'
             
             try {
+                // 1. 先检查是否有未到期卡密
+                const checkResponse = await fetch('/api/generate', {
+                    method: 'GET'
+                })
+                
+                const checkData = await checkResponse.json()
+                
+                if (checkData.success && checkData.hasActiveKey) {
+                    const confirm = window.confirm(
+                        `⚠️ You already have an active license key!\n\n` +
+                        `Key: ${checkData.activeKey.licenseKey}\n` +
+                        `Expires: ${checkData.activeKey.expiresAtReadable}\n\n` +
+                        `Generating a new key will replace the existing one. Continue?`
+                    )
+                    
+                    if (!confirm) {
+                        // 显示现有卡密
+                        copyButton.disabled = false
+                        licenseKeyElement.innerHTML = checkData.activeKey.licenseKey
+                        validityInfoElement.textContent = `Valid until: ${checkData.activeKey.expiresAtReadable}`
+                        currentKeyData = checkData.activeKey
+                        return
+                    }
+                }
+                
+                // 2. 生成新卡密
                 const response = await fetch('/api/generate', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        source: 'web_page',
-                        timestamp: new Date().toISOString()
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    currentKeyData = data.data;
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ source: 'web_page' })
+                })
+
+                const result = await response.json()
+
+                // 模拟网络延迟
+                await new Promise(resolve => setTimeout(resolve, 800))
+
+                if (result.success) {
+                    currentKeyData = result.data
                     
                     // 显示卡密
-                    licenseKeyElement.innerHTML = data.data.licenseKey;
-                    
-                    // 更新过期时间信息
-                    validityInfoElement.textContent = `Valid until: ${data.data.expiresAtReadable}`;
+                    licenseKeyElement.innerHTML = result.data.licenseKey
+                    validityInfoElement.textContent = `Valid until: ${result.data.expiresAtReadable}`
                     
                     // 启用复制按钮
-                    copyButton.disabled = false;
+                    copyButton.disabled = false
                     
-                    console.log('Key generated:', data.data.licenseKey);
+                    console.log('Key generated:', result.data)
                 } else {
-                    throw new Error(data.message || 'Failed to generate key');
+                    throw new Error(result.message)
                 }
             } catch (error) {
-                console.error('Error generating key:', error);
-                showError('Failed to generate license key. Please try again.');
-                licenseKeyElement.innerHTML = '<span style="color: #f44336">Failed to generate</span>';
+                console.error('Error generating key:', error)
+                showError('Failed to generate license key. Please try again.')
+                licenseKeyElement.innerHTML = '<span style="color: #f44336">Failed to generate</span>'
             }
         }
         
         // 复制卡密
         function copyLicenseKey() {
             if (!currentKeyData || !currentKeyData.licenseKey) {
-                showError('No key to copy');
-                return;
+                showError('No key to copy')
+                return
             }
             
-            const keyText = currentKeyData.licenseKey;
+            const keyText = currentKeyData.licenseKey
             
             navigator.clipboard.writeText(keyText).then(() => {
                 // 视觉反馈
-                copyButton.textContent = '✓ Copied!';
-                copyButton.classList.add('copied');
+                copyButton.textContent = '✓ Copied!'
+                copyButton.classList.add('copied')
                 
                 setTimeout(() => {
-                    copyButton.textContent = 'Copy Key';
-                    copyButton.classList.remove('copied');
-                }, 2000);
+                    copyButton.textContent = 'Copy Key'
+                    copyButton.classList.remove('copied')
+                }, 2000)
             }).catch(err => {
-                console.error('Copy failed:', err);
-                showError('Copy failed. Please select and copy manually.');
-            });
+                console.error('Copy failed:', err)
+                showError('Copy failed. Please select and copy manually.')
+            })
         }
         
         // 显示错误
         function showError(message) {
-            errorMessageElement.textContent = message;
-            errorMessageElement.style.display = 'block';
+            errorMessageElement.textContent = message
+            errorMessageElement.style.display = 'block'
             
             setTimeout(() => {
-                errorMessageElement.style.display = 'none';
-            }, 5000);
+                errorMessageElement.style.display = 'none'
+            }, 5000)
         }
         
         // 查看所有卡密
         function viewAllKeys() {
-            window.location.href = '/all-keys.html';
+            window.location.href = '/all-keys.html'
         }
         
         // 返回首页
         function goHome() {
-            window.location.href = '/index.html';
+            window.location.href = '/index.html'
         }
     </script>
 </body>
