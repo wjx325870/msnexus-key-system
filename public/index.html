@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ms-Nexus License Authentication</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(100, 80, 255, 0.2) 0%, transparent 20%),
+                radial-gradient(circle at 80% 70%, rgba(255, 100, 100, 0.15) 0%, transparent 20%),
+                radial-gradient(circle at 40% 80%, rgba(100, 200, 255, 0.1) 0%, transparent 20%),
+                linear-gradient(135deg, #0a0e2a 0%, #1a1b3a 50%, #0c0f2a 100%);
+            min-height: 100vh;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+                radial-gradient(2px 2px at 40px 70px, #fff, transparent),
+                radial-gradient(1px 1px at 90px 40px, #ddd, transparent),
+                radial-gradient(1px 1px at 130px 80px, #fff, transparent),
+                radial-gradient(2px 2px at 160px 120px, #eee, transparent);
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            z-index: 0;
+            animation: twinkle 5s infinite alternate;
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.8; }
+        }
+        
+        .container {
+            background: rgba(15, 20, 45, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(100, 120, 255, 0.2);
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+        
+        .logo-container {
+            margin-bottom: 30px;
+        }
+        
+        .logo-img {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #6c8cff, #4a6fff);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 0 20px rgba(108, 140, 255, 0.5);
+        }
+        
+        h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #6c8cff, #b0c6ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            color: #aaa;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+        
+        .auth-step {
+            background: rgba(30, 35, 70, 0.7);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            text-align: left;
+            border-left: 4px solid #6c8cff;
+        }
+        
+        .step-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+        
+        .step-number {
+            background: #6c8cff;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .step-content {
+            margin-bottom: 15px;
+            color: #ccc;
+        }
+        
+        .step-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .step-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(108, 140, 255, 0.3);
+            border-radius: 25px;
+            padding: 12px 20px;
+            color: white;
+            font-size: 1em;
+        }
+        
+        .step-input:focus {
+            outline: none;
+            border-color: #6c8cff;
+        }
+        
+        .circle-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #6c8cff, #4a6fff);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            transition: all 0.3s;
+        }
+        
+        .circle-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(108, 140, 255, 0.5);
+        }
+        
+        .circle-btn.skip {
+            background: rgba(255, 255, 255, 0.1);
+            color: #aaa;
+        }
+        
+        .circle-btn.skip:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .main-btn {
+            background: linear-gradient(135deg, #4CAF50, #2E8B57);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 25px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+        }
+        
+        .main-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(76, 175, 80, 0.4);
+        }
+        
+        .note-section {
+            margin-top: 25px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            color: #aaa;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+        
+        .note-section a {
+            color: #6c8cff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .note-section a:hover {
+            text-decoration: underline;
+        }
+        
+        .view-keys-link {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .view-keys-link a {
+            color: #6c8cff;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        
+        .view-keys-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .footer {
+            margin-top: 20px;
+            color: #666;
+            font-size: 0.85em;
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .step-actions {
+                flex-direction: column;
+            }
+            
+            .circle-btn {
+                width: 100%;
+                border-radius: 25px;
+                height: 45px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <div class="logo-img">M</div>
+            <h1>Ms-Nexus License Auth</h1>
+            <p class="subtitle">Complete steps to get your license key</p>
+        </div>
+        
+        <div class="auth-step">
+            <div class="step-title">
+                <div class="step-number">1</div>
+                <span>Join Discord Community</span>
+            </div>
+            <div class="step-content">
+                Connect with our community for updates and support
+            </div>
+            <div class="step-actions">
+                <button class="circle-btn" id="joinDiscordBtn">Join</button>
+                <button class="circle-btn skip" onclick="skipStep(1)">Skip</button>
+            </div>
+        </div>
+        
+        <div class="auth-step">
+            <div class="step-title">
+                <div class="step-number">2</div>
+                <span>Rate Our Service!</span>
+            </div>
+            <div class="step-content">
+                Share your experience (optional)
+            </div>
+            <div class="step-actions">
+                <input type="text" class="step-input" id="feedbackInput" placeholder="Your feedback...">
+                <button class="circle-btn skip" onclick="skipStep(2)">Skip</button>
+            </div>
+        </div>
+        
+        <button class="main-btn" onclick="proceedToKey()">Get License Key!</button>
+        
+        <div class="note-section">
+            <strong>Important Notes:</strong><br>
+            • This script currently only supports Delta Injector<br>
+            • <a href="https://discord.com/invite/BWcHXTujG8" target="_blank" id="discordLink">Join our Discord to help us improve 🙏</a>
+        </div>
+        
+        <div class="view-keys-link">
+            <a href="/all-keys.html">📋 View All Generated Keys</a>
+        </div>
+        
+        <div class="footer">
+            © 2024 Ms-Nexus System | Secure License Management
+        </div>
+    </div>
+
+    <script>
+        // Discord链接
+        const DISCORD_INVITE = 'https://discord.com/invite/BWcHXTujG8';
+        
+        // 元素
+        const joinDiscordBtn = document.getElementById('joinDiscordBtn');
+        const discordLink = document.getElementById('discordLink');
+        const feedbackInput = document.getElementById('feedbackInput');
+        
+        // 设置Discord链接
+        discordLink.href = DISCORD_INVITE;
+        
+        // 加入Discord按钮事件
+        joinDiscordBtn.addEventListener('click', function() {
+            window.open(DISCORD_INVITE, '_blank');
+        });
+        
+        // 跳过步骤
+        function skipStep(stepNumber) {
+            console.log(`Step ${stepNumber} skipped`);
+            // 可以在这里添加跳过逻辑，如标记步骤已完成
+        }
+        
+        // 前往卡密页面
+        function proceedToKey() {
+            // 检查是否提供了反馈（可选）
+            const feedback = feedbackInput.value.trim();
+            if (feedback) {
+                console.log('User feedback:', feedback);
+                // 这里可以发送反馈到服务器
+            }
+            
+            // 重定向到卡密页面
+            window.location.href = 'key.html';
+        }
+        
+        // 页面加载完成后
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Ms-Nexus Authentication page loaded');
+        });
+    </script>
+</body>
+</html>
