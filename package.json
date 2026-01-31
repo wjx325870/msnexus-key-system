@@ -1,8 +1,11 @@
 {
   "name": "msnexus-key-system",
   "version": "1.0.0",
-  "description": "Ms-Nexus License Key Server",
+  "description": "Ms-Nexus License Key System with Supabase Database",
   "engines": {
     "node": ">=18.x"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.7"
   }
 }
