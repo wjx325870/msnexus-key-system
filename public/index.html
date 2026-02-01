@@ -68,19 +68,31 @@
             margin-bottom: 20px;
         }
         
+        /* 修改这里：使用图片作为Logo */
         .logo-img {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #6c8cff, #4a6fff);
+            width: 100px; /* 稍微大一点，显示更清晰 */
+            height: 100px;
+            background: url('/public/logo.png') no-repeat center center;
+            background-size: contain; /* 保持图片完整显示 */
+            background-color: rgba(108, 140, 255, 0.1); /* 浅蓝色背景 */
             border-radius: 50%;
             margin: 0 auto 20px;
+            box-shadow: 0 0 25px rgba(108, 140, 255, 0.6);
+            border: 2px solid rgba(108, 140, 255, 0.3);
+        }
+        
+        /* 如果图片加载失败，显示备用样式 */
+        .logo-img::before {
+            content: "LOGO";
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 30px;
+            width: 100%;
+            height: 100%;
+            font-size: 20px;
             font-weight: bold;
-            color: white;
-            box-shadow: 0 0 20px rgba(108, 140, 255, 0.5);
+            color: rgba(255, 255, 255, 0.7);
+            opacity: 0; /* 默认隐藏，图片加载失败时显示 */
         }
         
         h1 {
@@ -375,6 +387,12 @@
             .completion-badge {
                 align-self: flex-start;
             }
+            
+            /* 手机端调整Logo大小 */
+            .logo-img {
+                width: 80px;
+                height: 80px;
+            }
         }
         
         .scroll-indicator {
@@ -424,7 +442,8 @@
 <body>
     <div class="container">
         <div class="logo-container">
-            <div class="logo-img">M</div>
+            <!-- 修改这里：使用图片Logo，移除了字母"M" -->
+            <div class="logo-img"></div>
             <h1>Ms-Nexus License Auth</h1>
             <p class="subtitle">Complete steps to get your license key</p>
         </div>
@@ -470,7 +489,6 @@
             </div>
         </div>
         
-        <!-- 原始UI：只有一个Get License Key按钮 -->
         <button class="main-btn" id="getKeyBtn" disabled onclick="proceedToKey()">Get License Key!</button>
         
         <!-- 新增：View My License按钮 -->
@@ -483,9 +501,8 @@
             • This script currently only supports Delta Injector<br>
             • <a href="https://discord.com/invite/BWcHXTujG8" target="_blank">Join our Discord to help us improve 🙏</a><br><br>
             
-            <!-- 这个链接可以保留，但不再是主要按钮 -->
             <div style="text-align: center; margin-top: 10px;">
-                <a href="find-license.html" style="color: #6c8cff; text-decoration: none;">
+                <a href="/public/find-license.html" style="color: #6c8cff; text-decoration: none;">
                     🔍 Already have a license key? Find it!
                 </a>
             </div>
@@ -523,6 +540,7 @@
             updateProgressIndicator();
             updateGetKeyButton();
             setupScrollIndicator();
+            checkLogoLoaded();
         }
         
         function setupScrollIndicator() {
@@ -545,6 +563,25 @@
             if (window.scrollY > 100) {
                 scrollIndicator.classList.add('hidden');
             }
+        }
+        
+        // 检查Logo图片是否加载成功
+        function checkLogoLoaded() {
+            const logoImg = document.querySelector('.logo-img');
+            const logoUrl = '/public/logo.png';
+            
+            // 创建一个Image对象测试加载
+            const testImage = new Image();
+            testImage.onload = function() {
+                console.log('Logo图片加载成功:', logoUrl);
+            };
+            testImage.onerror = function() {
+                console.error('Logo图片加载失败:', logoUrl);
+                // 如果图片加载失败，显示备用文本
+                logoImg.style.background = 'linear-gradient(135deg, #6c8cff, #4a6fff)';
+                logoImg.innerHTML = '<span style="color: white; font-weight: bold;">MSN</span>';
+            };
+            testImage.src = logoUrl;
         }
         
         function updateStepUI(stepNumber, completed) {
@@ -698,7 +735,7 @@
         
         function proceedToKey() {
             if (step1Completed && step2Completed) {
-                window.location.href = 'key.html';
+                window.location.href = '/public/key.html';
             } else {
                 showNotification('Please complete all steps first', 'error');
             }
@@ -706,8 +743,7 @@
         
         // 新增：跳转到查看卡密页面
         function viewMyLicense() {
-            // 跳转到查看卡密页面
-            window.location.href = 'view-license.html';
+            window.location.href = '/public/view-license.html';
         }
         
         document.addEventListener('DOMContentLoaded', initializeUI);
