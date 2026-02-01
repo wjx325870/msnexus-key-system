@@ -20,17 +20,13 @@
                 linear-gradient(135deg, #0a0e2a 0%, #1a1b3a 50%, #0c0f2a 100%);
             min-height: 100vh;
             color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             padding: 20px;
             position: relative;
-            overflow: hidden;
         }
         
         body::before {
             content: '';
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
@@ -45,6 +41,7 @@
             background-size: 200px 200px;
             z-index: 0;
             animation: twinkle 5s infinite alternate;
+            pointer-events: none;
         }
         
         @keyframes twinkle {
@@ -59,19 +56,17 @@
             padding: 40px;
             width: 100%;
             max-width: 450px;
-            max-height: 85vh; /* 限制高度 */
+            margin: 0 auto;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(100, 120, 255, 0.2);
             position: relative;
             z-index: 1;
             text-align: center;
-            display: flex;
-            flex-direction: column;
+            margin-bottom: 40px;
         }
         
         .logo-container {
             margin-bottom: 20px;
-            flex-shrink: 0; /* 防止压缩 */
         }
         
         .logo-img {
@@ -102,55 +97,6 @@
             color: #aaa;
             margin-bottom: 20px;
             font-size: 1.1em;
-        }
-        
-        /* 滑块容器 - 新增 */
-        .slider-container {
-            flex: 1;
-            overflow-y: auto; /* 垂直滚动 */
-            padding-right: 10px; /* 为滚动条留空间 */
-            margin-bottom: 20px;
-            min-height: 300px; /* 最小高度确保滑块有效 */
-        }
-        
-        /* 自定义滚动条样式 */
-        .slider-container::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        .slider-container::-webkit-scrollbar-track {
-            background: rgba(30, 35, 70, 0.3);
-            border-radius: 10px;
-        }
-        
-        .slider-container::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #6c8cff, #4a6fff);
-            border-radius: 10px;
-        }
-        
-        .slider-container::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, #4a6fff, #6c8cff);
-        }
-        
-        /* 横屏设备特定样式 */
-        @media (max-height: 600px) {
-            .container {
-                max-height: 90vh;
-                max-width: 500px;
-            }
-            
-            .slider-container {
-                min-height: 200px;
-            }
-            
-            .auth-step {
-                padding: 15px;
-                margin-bottom: 15px;
-            }
-            
-            h1 {
-                font-size: 1.8em;
-            }
         }
         
         .auth-step {
@@ -350,7 +296,7 @@
             display: flex;
             justify-content: center;
             gap: 10px;
-            margin: 10px 0;
+            margin: 10px 0 30px 0;
         }
         
         .progress-dot {
@@ -371,16 +317,14 @@
         }
         
         .footer {
-            margin-top: 10px;
+            margin-top: 30px;
             color: #666;
             font-size: 0.85em;
-            flex-shrink: 0;
         }
         
-        @media (max-width: 480px), (max-height: 700px) {
+        @media (max-width: 480px) {
             .container {
                 padding: 25px;
-                max-height: 90vh;
             }
             
             h1 {
@@ -413,26 +357,73 @@
             }
         }
         
-        /* 滑块提示 - 新增 */
-        .slider-hint {
-            color: #888;
-            font-size: 0.8em;
-            margin-top: 10px;
-            text-align: center;
-            display: none;
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
-        }
-        
-        /* 检测横屏 */
-        @media (orientation: landscape) and (max-height: 500px) {
-            .slider-hint {
-                display: block;
+        /* 滚动动画 - 新增 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
             }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .auth-step {
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        .auth-step:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+        
+        .auth-step:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        /* 滚动指示器 - 新增 */
+        .scroll-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #6c8cff;
+            font-size: 0.9em;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            z-index: 100;
+        }
+        
+        .scroll-indicator.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .scroll-indicator-arrow {
+            width: 30px;
+            height: 30px;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        /* 平滑滚动 */
+        html {
+            scroll-behavior: smooth;
         }
     </style>
 </head>
@@ -449,47 +440,40 @@
             <div class="progress-dot" id="progress2"></div>
         </div>
         
-        <!-- 滑块提示 -->
-        <div class="slider-hint" id="sliderHint">
-            ↕ Scroll down to see more content
+        <!-- 步骤内容现在是全屏滚动的一部分 -->
+        <div class="auth-step" id="step1">
+            <div class="step-header">
+                <div class="step-title-wrapper">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Join Discord Community</div>
+                </div>
+                <div class="completion-badge">✓ Completed</div>
+            </div>
+            <div class="step-content">
+                Connect with our community for updates and support
+            </div>
+            <div class="step-actions">
+                <button class="circle-btn" id="joinBtn">Join</button>
+                <button class="circle-btn skip" onclick="skipStep(1)">Skip</button>
+            </div>
         </div>
         
-        <!-- 滑块容器 -->
-        <div class="slider-container" id="sliderContainer">
-            <div class="auth-step" id="step1">
-                <div class="step-header">
-                    <div class="step-title-wrapper">
-                        <div class="step-number">1</div>
-                        <div class="step-title">Join Discord Community</div>
-                    </div>
-                    <div class="completion-badge">✓ Completed</div>
+        <div class="auth-step" id="step2">
+            <div class="step-header">
+                <div class="step-title-wrapper">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Rate Our Service!</div>
                 </div>
-                <div class="step-content">
-                    Connect with our community for updates and support
-                </div>
-                <div class="step-actions">
-                    <button class="circle-btn" id="joinBtn">Join</button>
-                    <button class="circle-btn skip" onclick="skipStep(1)">Skip</button>
-                </div>
+                <div class="completion-badge">✓ Completed</div>
             </div>
-            
-            <div class="auth-step" id="step2">
-                <div class="step-header">
-                    <div class="step-title-wrapper">
-                        <div class="step-number">2</div>
-                        <div class="step-title">Rate Our Service!</div>
-                    </div>
-                    <div class="completion-badge">✓ Completed</div>
-                </div>
-                <div class="step-content">
-                    Share your experience (optional)<br>
-                    <small style="color: #888; font-size: 0.9em;">Feedback will be sent to 2435053202@qq.com</small>
-                </div>
-                <div class="step-actions">
-                    <input type="text" class="step-input" id="feedbackInput" placeholder="Your feedback...">
-                    <button class="circle-btn submit" id="submitBtn">✓</button>
-                    <button class="circle-btn skip" onclick="skipStep(2)">Skip</button>
-                </div>
+            <div class="step-content">
+                Share your experience (optional)<br>
+                <small style="color: #888; font-size: 0.9em;">Feedback will be sent to 2435053202@qq.com</small>
+            </div>
+            <div class="step-actions">
+                <input type="text" class="step-input" id="feedbackInput" placeholder="Your feedback...">
+                <button class="circle-btn submit" id="submitBtn">✓</button>
+                <button class="circle-btn skip" onclick="skipStep(2)">Skip</button>
             </div>
         </div>
         
@@ -506,6 +490,14 @@
         </div>
     </div>
 
+    <!-- 滚动指示器 - 新增 -->
+    <div class="scroll-indicator" id="scrollIndicator">
+        <svg class="scroll-indicator-arrow" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 5V19M12 19L5 12M12 19L19 12" stroke="#6c8cff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Scroll</span>
+    </div>
+
     <script>
         // DOM Elements
         const step1Element = document.getElementById('step1');
@@ -516,8 +508,7 @@
         const feedbackInput = document.getElementById('feedbackInput');
         const progress1 = document.getElementById('progress1');
         const progress2 = document.getElementById('progress2');
-        const sliderContainer = document.getElementById('sliderContainer');
-        const sliderHint = document.getElementById('sliderHint');
+        const scrollIndicator = document.getElementById('scrollIndicator');
         
         // Step completion states
         let step1Completed = localStorage.getItem('step1Completed') === 'true';
@@ -529,42 +520,34 @@
             updateStepUI(2, step2Completed);
             updateProgressIndicator();
             updateGetKeyButton();
-            setupSlider();
+            setupScrollIndicator();
         }
         
-        // 设置滑块
-        function setupSlider() {
-            // 检测是否为横屏
-            function checkOrientation() {
-                const isLandscape = window.innerWidth > window.innerHeight;
-                const isSmallHeight = window.innerHeight < 600;
-                
-                if ((isLandscape && isSmallHeight) || window.innerHeight < 500) {
-                    sliderHint.style.display = 'block';
-                    sliderContainer.style.maxHeight = '250px';
-                } else {
-                    sliderHint.style.display = 'none';
-                    sliderContainer.style.maxHeight = 'none';
-                }
-            }
-            
-            // 初始检查
-            checkOrientation();
-            
-            // 监听窗口大小变化
-            window.addEventListener('resize', checkOrientation);
-            
+        // 设置滚动指示器
+        function setupScrollIndicator() {
             // 监听滚动事件
-            sliderContainer.addEventListener('scroll', function() {
-                const scrollPercentage = (sliderContainer.scrollTop / (sliderContainer.scrollHeight - sliderContainer.clientHeight)) * 100;
+            window.addEventListener('scroll', function() {
+                const scrollPosition = window.scrollY;
+                const windowHeight = window.innerHeight;
+                const documentHeight = document.documentElement.scrollHeight;
                 
-                // 如果滚动到底部，隐藏提示
-                if (scrollPercentage > 80) {
-                    sliderHint.style.opacity = '0.3';
+                // 如果接近底部，隐藏指示器
+                if (scrollPosition + windowHeight >= documentHeight - 100) {
+                    scrollIndicator.classList.add('hidden');
                 } else {
-                    sliderHint.style.opacity = '1';
+                    scrollIndicator.classList.remove('hidden');
+                }
+                
+                // 如果已滚动一定距离，隐藏指示器
+                if (scrollPosition > 100) {
+                    scrollIndicator.classList.add('hidden');
                 }
             });
+            
+            // 初始检查
+            if (window.scrollY > 100) {
+                scrollIndicator.classList.add('hidden');
+            }
         }
         
         // 更新步骤UI
@@ -629,6 +612,16 @@
             updateGetKeyButton();
             
             showNotification(`Step ${stepNumber} completed!`, 'success');
+            
+            // 滚动到下一步
+            if (stepNumber === 1 && !step2Completed) {
+                setTimeout(() => {
+                    document.getElementById('step2').scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                }, 500);
+            }
         }
         
         // 跳过步骤
@@ -765,6 +758,27 @@
         
         // 初始化
         document.addEventListener('DOMContentLoaded', initializeUI);
+        
+        // 添加键盘快捷键支持
+        document.addEventListener('keydown', function(e) {
+            // 空格键或方向键下键滚动页面
+            if (e.code === 'Space' || e.code === 'ArrowDown') {
+                e.preventDefault();
+                window.scrollBy({
+                    top: window.innerHeight * 0.8,
+                    behavior: 'smooth'
+                });
+            }
+            
+            // 方向键上键向上滚动
+            if (e.code === 'ArrowUp') {
+                e.preventDefault();
+                window.scrollBy({
+                    top: -window.innerHeight * 0.8,
+                    behavior: 'smooth'
+                });
+            }
+        });
     </script>
 </body>
 </html>
