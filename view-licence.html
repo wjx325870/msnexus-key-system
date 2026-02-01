@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View License - Ms-Nexus</title>
+    <style>
+        /* 完全保持与 index.html 相同的UI风格 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(100, 80, 255, 0.2) 0%, transparent 20%),
+                radial-gradient(circle at 80% 70%, rgba(255, 100, 100, 0.15) 0%, transparent 20%),
+                radial-gradient(circle at 40% 80%, rgba(100, 200, 255, 0.1) 0%, transparent 20%),
+                linear-gradient(135deg, #0a0e2a 0%, #1a1b3a 50%, #0c0f2a 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+                radial-gradient(2px 2px at 40px 70px, #fff, transparent),
+                radial-gradient(1px 1px at 90px 40px, #ddd, transparent),
+                radial-gradient(1px 1px at 130px 80px, #fff, transparent),
+                radial-gradient(2px 2px at 160px 120px, #eee, transparent);
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            z-index: 0;
+            animation: twinkle 5s infinite alternate;
+            pointer-events: none;
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.8; }
+        }
+        
+        .container {
+            background: rgba(15, 20, 45, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            margin: 0 auto;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(100, 120, 255, 0.2);
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+        
+        .logo-container {
+            margin-bottom: 20px;
+        }
+        
+        .logo-img {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #6c8cff, #4a6fff);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 0 20px rgba(108, 140, 255, 0.5);
+        }
+        
+        h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #6c8cff, #b0c6ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            color: #aaa;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+        
+        /* 许可证卡片 - 保持与认证步骤相同的样式 */
+        .license-card {
+            background: rgba(30, 35, 70, 0.7);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: left;
+            border-left: 4px solid #6c8cff;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .license-card.valid {
+            border-left-color: #4CAF50;
+            background: rgba(30, 70, 50, 0.7);
+        }
+        
+        .license-card.expired {
+            border-left-color: #FF5722;
+            background: rgba(70, 30, 30, 0.7);
+        }
+        
+        .license-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .license-number {
+            background: #6c8cff;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .license-card.valid .license-number {
+            background: #4CAF50;
+        }
+        
+        .license-card.expired .license-number {
+            background: #FF5722;
+        }
+        
+        .license-title-wrapper {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+        
+        .license-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin: 0;
+            line-height: 1.2;
+        }
+        
+        .license-status {
+            background: #4CAF50;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .license-card.expired .license-status {
+            background: #FF5722;
+        }
+        
+        .license-content {
+            margin-bottom: 15px;
+            color: #ccc;
+            padding-left: 45px;
+        }
+        
+        .license-details {
+            padding-left: 45px;
+        }
+        
+        .detail-item {
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .detail-label {
+            color: #6c8cff;
+            min-width: 100px;
+            font-weight: bold;
+        }
+        
+        .detail-value {
+            color: #fff;
+            flex: 1;
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+        }
+        
+        .license-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            padding-left: 45px;
+        }
+        
+        .license-btn {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(108, 140, 255, 0.3);
+            border-radius: 25px;
+            padding: 12px 20px;
+            color: white;
+            font-size: 0.9em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .license-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 140, 255, 0.3);
+        }
+        
+        .license-btn.copy {
+            background: linear-gradient(135deg, #6c8cff, #4a6fff);
+        }
+        
+        .license-btn.check {
+            background: linear-gradient(135deg, #4CAF50, #2E8B57);
+        }
+        
+        .license-btn.renew {
+            background: linear-gradient(135deg, #FF9800, #FF5722);
+        }
+        
+        .no-license {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .no-license h3 {
+            color: #6c8cff;
+            margin-bottom: 15px;
+        }
+        
+        .no-license p {
+            color: #aaa;
+            margin-bottom: 20px;
+        }
+        
+        .create-btn {
+            background: linear-gradient(135deg, #6c8cff, #4a6fff);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 25px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin: 10px 0;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+        }
+        
+        .create-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(108, 140, 255, 0.4);
+        }
+        
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(108, 140, 255, 0.5);
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            transition: all 0.3s;
+        }
+        
+        .back-btn:hover {
+            background: rgba(108, 140, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .note-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            color: #aaa;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+        
+        .note-section a {
+            color: #6c8cff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .note-section a:hover {
+            text-decoration: underline;
+        }
+        
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 10px 0 30px 0;
+        }
+        
+        .progress-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+        }
+        
+        .progress-dot.active {
+            background: #6c8cff;
+            transform: scale(1.2);
+        }
+        
+        .progress-dot.completed {
+            background: #4CAF50;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.85em;
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .license-actions {
+                flex-direction: column;
+            }
+            
+            .license-btn {
+                width: 100%;
+                border-radius: 25px;
+                height: 45px;
+            }
+            
+            .license-content,
+            .license-actions {
+                padding-left: 0;
+            }
+            
+            .license-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .license-status {
+                align-self: flex-start;
+            }
+            
+            .license-details {
+                padding-left: 0;
+            }
+        }
+        
+        .scroll-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #6c8cff;
+            font-size: 0.9em;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            z-index: 100;
+        }
+        
+        .scroll-indicator.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .scroll-indicator-arrow {
+            width: 30px;
+            height: 30px;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <div class="logo-img">M</div>
+            <h1>View My License</h1>
+            <p class="subtitle">Check your license key details and status</p>
+        </div>
+        
+        <div class="progress-indicator">
+            <div class="progress-dot completed"></div>
+            <div class="progress-dot completed"></div>
+            <div class="progress-dot active"></div>
+        </div>
+        
+        <!-- 如果有许可证，显示这个 -->
+        <div id="licenseSection">
+            <div class="license-card valid" id="licenseCard">
+                <div class="license-header">
+                    <div class="license-title-wrapper">
+                        <div class="license-number">1</div>
+                        <div class="license-title">Your Active License</div>
+                    </div>
+                    <div class="license-status" id="licenseStatus">✓ ACTIVE</div>
+                </div>
+                <div class="license-content">
+                    Your license key is currently active and valid
+                </div>
+                <div class="license-details">
+                    <div class="detail-item">
+                        <span class="detail-label">License Key:</span>
+                        <span class="detail-value" id="licenseKeyText">MSN-2026-X8B7-C3F9-A2E5-D4G1</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Generated:</span>
+                        <span class="detail-value" id="generatedDate">2026-01-15 14:30:00</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Expires:</span>
+                        <span class="detail-value" id="expiryDate">2026-02-15 14:30:00</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Days Left:</span>
+                        <span class="detail-value" id="daysLeft">30 days</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Device ID:</span>
+                        <span class="detail-value" id="deviceId">web_user_123456</span>
+                    </div>
+                </div>
+                <div class="license-actions">
+                    <button class="license-btn copy" onclick="copyLicenseKey()">
+                        📋 Copy Key
+                    </button>
+                    <button class="license-btn check" onclick="checkLicenseValidity()">
+                        ✅ Check Now
+                    </button>
+                    <button class="license-btn renew" onclick="renewLicense()">
+                        🔄 Renew
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 如果没有许可证，显示这个 -->
+        <div id="noLicenseSection" style="display: none;">
+            <div class="no-license">
+                <h3>⚠️ No License Found</h3>
+                <p>You don't have an active license key yet.</p>
+                <p>Complete the authentication steps to get your license key.</p>
+                <p style="margin-top: 20px; font-style: italic; color: #888;">
+                    ? No license key? Create one!
+                </p>
+            </div>
+            
+            <button class="create-btn" onclick="createNewLicense()">
+                🎫 Get License Key
+            </button>
+        </div>
+        
+        <button class="back-btn" onclick="goBack()">
+            ↩ Back to Main Page
+        </button>
+        
+        <div class="note-section">
+            <strong>License Information:</strong><br>
+            • Each license is tied to your account and device<br>
+            • License keys expire after 30 days of activation<br>
+            • You can renew your license before it expires<br>
+            • <a href="check-license.html" style="color: #4CAF50;">Check another license key</a>
+        </div>
+        
+        <div class="footer">
+            © 2026 Ms-Nexus System | Secure License Management
+        </div>
+    </div>
+
+    <div class="scroll-indicator" id="scrollIndicator">
+        <svg class="scroll-indicator-arrow" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 5V19M12 19L5 12M12 19L19 12" stroke="#6c8cff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Scroll</span>
+    </div>
+
+    <script>
+        // 获取用户ID（存储在localStorage中）
+        function getUserId() {
+            let userId = localStorage.getItem('msnexus_user_id');
+            if (!userId) {
+                userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('msnexus_user_id', userId);
+            }
+            return userId;
+        }
+        
+        // 获取设备ID
+        function getDeviceId() {
+            let deviceId = localStorage.getItem('msnexus_device_id');
+            if (!deviceId) {
+                deviceId = 'device_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('msnexus_device_id', deviceId);
+            }
+            return deviceId;
+        }
+        
+        // 加载许可证信息
+        function loadLicenseInfo() {
+            const userId = getUserId();
+            const licenseSection = document.getElementById('licenseSection');
+            const noLicenseSection = document.getElementById('noLicenseSection');
+            
+            // 这里应该调用API获取用户许可证
+            // 暂时使用模拟数据
+            const hasLicense = Math.random() > 0.3; // 70%几率显示有许可证
+            
+            if (hasLicense) {
+                licenseSection.style.display = 'block';
+                noLicenseSection.style.display = 'none';
+                
+                // 模拟许可证数据
+                const generatedDate = new Date();
+                const expiryDate = new Date(generatedDate);
+                expiryDate.setDate(expiryDate.getDate() + 30); // 30天后过期
+                
+                const daysLeft = Math.ceil((expiryDate - new Date()) / (1000 * 60 * 60 * 24));
+                
+                // 生成随机许可证密钥
+                const timestamp = Date.now().toString(36).toUpperCase();
+                const random = Math.random().toString(36).substr(2, 9).toUpperCase();
+                const licenseKey = `MSN-2026-${timestamp.substr(0,4)}-${random.substr(0,4)}-${random.substr(4,4)}-${timestamp.substr(4,4)}`;
+                
+                // 更新UI
+                document.getElementById('licenseKeyText').textContent = licenseKey;
+                document.getElementById('generatedDate').textContent = generatedDate.toLocaleString();
+                document.getElementById('expiryDate').textContent = expiryDate.toLocaleString();
+                document.getElementById('daysLeft').textContent = `${daysLeft} days`;
+                document.getElementById('deviceId').textContent = getDeviceId();
+                
+                // 如果少于7天，显示警告
+                if (daysLeft < 7) {
+                    const licenseCard = document.getElementById('licenseCard');
+                    const licenseStatus = document.getElementById('licenseStatus');
+                    
+                    if (daysLeft <= 0) {
+                        // 已过期
+                        licenseCard.classList.remove('valid');
+                        licenseCard.classList.add('expired');
+                        licenseStatus.textContent = '✗ EXPIRED';
+                        licenseStatus.style.background = '#FF5722';
+                    } else {
+                        // 即将过期
+                        licenseStatus.textContent = `⚠ ${daysLeft} DAYS`;
+                        licenseStatus.style.background = '#FF9800';
+                    }
+                }
+                
+            } else {
+                licenseSection.style.display = 'none';
+                noLicenseSection.style.display = 'block';
+            }
+        }
+        
+        // 复制许可证密钥
+        function copyLicenseKey() {
+            const licenseKey = document.getElementById('licenseKeyText').textContent;
+            
+            navigator.clipboard.writeText(licenseKey).then(() => {
+                showNotification('License key copied to clipboard!', 'success');
+            }).catch(err => {
+                // 备用方法
+                const textArea = document.createElement('textarea');
+                textArea.value = licenseKey;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showNotification('License key copied!', 'success');
+            });
+        }
+        
+        // 检查许可证有效性
+        function checkLicenseValidity() {
+            showNotification('Checking license validity...', 'info');
+            
+            // 模拟API调用
+            setTimeout(() => {
+                const daysLeft = parseInt(document.getElementById('daysLeft').textContent);
+                
+                if (daysLeft <= 0) {
+                    showNotification('❌ License has expired! Please renew.', 'error');
+                } else if (daysLeft < 7) {
+                    showNotification(`⚠️ License expires in ${daysLeft} days. Consider renewing.`, 'warning');
+                } else {
+                    showNotification('✅ License is valid and active!', 'success');
+                }
+            }, 1000);
+        }
+        
+        // 续订许可证
+        function renewLicense() {
+            showNotification('Redirecting to license renewal...', 'info');
+            setTimeout(() => {
+                window.location.href = 'key.html?renew=true';
+            }, 1500);
+        }
+        
+        // 创建新许可证
+        function createNewLicense() {
+            window.location.href = 'key.html';
+        }
+        
+        // 返回主页面
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+        
+        // 显示通知
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            let backgroundColor;
+            if (type === 'success') {
+                backgroundColor = 'rgba(76, 175, 80, 0.9)';
+            } else if (type === 'error') {
+                backgroundColor = 'rgba(244, 67, 54, 0.9)';
+            } else if (type === 'warning') {
+                backgroundColor = 'rgba(255, 152, 0, 0.9)';
+            } else {
+                backgroundColor = 'rgba(33, 150, 243, 0.9)';
+            }
+            
+            notification.innerHTML = `
+                <div style="
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: ${backgroundColor};
+                    color: white;
+                    padding: 15px 20px;
+                    border-radius: 10px;
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                    z-index: 1000;
+                    animation: slideIn 0.3s ease;
+                ">
+                    ${message}
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+        
+        // 添加CSS动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // 设置滚动指示器
+        function setupScrollIndicator() {
+            const scrollIndicator = document.getElementById('scrollIndicator');
+            
+            window.addEventListener('scroll', function() {
+                const scrollPosition = window.scrollY;
+                
+                if (scrollPosition > 100) {
+                    scrollIndicator.classList.add('hidden');
+                } else {
+                    scrollIndicator.classList.remove('hidden');
+                }
+            });
+        }
+        
+        // 页面加载时执行
+        document.addEventListener('DOMContentLoaded', function() {
+            loadLicenseInfo();
+            setupScrollIndicator();
+            console.log('View License page loaded');
+        });
+    </script>
+</body>
+</html>
