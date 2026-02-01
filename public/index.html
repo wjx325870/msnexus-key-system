@@ -59,15 +59,19 @@
             padding: 40px;
             width: 100%;
             max-width: 450px;
+            max-height: 85vh; /* 限制高度 */
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(100, 120, 255, 0.2);
             position: relative;
             z-index: 1;
             text-align: center;
+            display: flex;
+            flex-direction: column;
         }
         
         .logo-container {
-            margin-bottom: 30px;
+            margin-bottom: 20px;
+            flex-shrink: 0; /* 防止压缩 */
         }
         
         .logo-img {
@@ -96,15 +100,64 @@
         
         .subtitle {
             color: #aaa;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
             font-size: 1.1em;
+        }
+        
+        /* 滑块容器 - 新增 */
+        .slider-container {
+            flex: 1;
+            overflow-y: auto; /* 垂直滚动 */
+            padding-right: 10px; /* 为滚动条留空间 */
+            margin-bottom: 20px;
+            min-height: 300px; /* 最小高度确保滑块有效 */
+        }
+        
+        /* 自定义滚动条样式 */
+        .slider-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .slider-container::-webkit-scrollbar-track {
+            background: rgba(30, 35, 70, 0.3);
+            border-radius: 10px;
+        }
+        
+        .slider-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #6c8cff, #4a6fff);
+            border-radius: 10px;
+        }
+        
+        .slider-container::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #4a6fff, #6c8cff);
+        }
+        
+        /* 横屏设备特定样式 */
+        @media (max-height: 600px) {
+            .container {
+                max-height: 90vh;
+                max-width: 500px;
+            }
+            
+            .slider-container {
+                min-height: 200px;
+            }
+            
+            .auth-step {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
         }
         
         .auth-step {
             background: rgba(30, 35, 70, 0.7);
             border-radius: 15px;
             padding: 20px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             text-align: left;
             border-left: 4px solid #6c8cff;
             position: relative;
@@ -179,14 +232,14 @@
         .step-content {
             margin-bottom: 15px;
             color: #ccc;
-            padding-left: 45px; /* Align with step number */
+            padding-left: 45px;
         }
         
         .step-actions {
             display: flex;
             gap: 10px;
             margin-top: 15px;
-            padding-left: 45px; /* Align with step number */
+            padding-left: 45px;
         }
         
         .step-input {
@@ -274,7 +327,7 @@
         }
         
         .note-section {
-            margin-top: 25px;
+            margin-top: 20px;
             padding: 15px;
             background: rgba(255, 255, 255, 0.08);
             border-radius: 10px;
@@ -297,7 +350,7 @@
             display: flex;
             justify-content: center;
             gap: 10px;
-            margin: 20px 0;
+            margin: 10px 0;
         }
         
         .progress-dot {
@@ -318,14 +371,16 @@
         }
         
         .footer {
-            margin-top: 20px;
+            margin-top: 10px;
             color: #666;
             font-size: 0.85em;
+            flex-shrink: 0;
         }
         
-        @media (max-width: 480px) {
+        @media (max-width: 480px), (max-height: 700px) {
             .container {
                 padding: 25px;
+                max-height: 90vh;
             }
             
             h1 {
@@ -357,6 +412,28 @@
                 align-self: flex-start;
             }
         }
+        
+        /* 滑块提示 - 新增 */
+        .slider-hint {
+            color: #888;
+            font-size: 0.8em;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        /* 检测横屏 */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .slider-hint {
+                display: block;
+            }
+        }
     </style>
 </head>
 <body>
@@ -372,38 +449,47 @@
             <div class="progress-dot" id="progress2"></div>
         </div>
         
-        <div class="auth-step" id="step1">
-            <div class="step-header">
-                <div class="step-title-wrapper">
-                    <div class="step-number">1</div>
-                    <div class="step-title">Join Discord Community</div>
-                </div>
-                <div class="completion-badge">✓ Completed</div>
-            </div>
-            <div class="step-content">
-                Connect with our community for updates and support
-            </div>
-            <div class="step-actions">
-                <button class="circle-btn" id="joinBtn">Join</button>
-                <button class="circle-btn skip" onclick="skipStep(1)">Skip</button>
-            </div>
+        <!-- 滑块提示 -->
+        <div class="slider-hint" id="sliderHint">
+            ↕ Scroll down to see more content
         </div>
         
-        <div class="auth-step" id="step2">
-            <div class="step-header">
-                <div class="step-title-wrapper">
-                    <div class="step-number">2</div>
-                    <div class="step-title">Rate Our Service!</div>
+        <!-- 滑块容器 -->
+        <div class="slider-container" id="sliderContainer">
+            <div class="auth-step" id="step1">
+                <div class="step-header">
+                    <div class="step-title-wrapper">
+                        <div class="step-number">1</div>
+                        <div class="step-title">Join Discord Community</div>
+                    </div>
+                    <div class="completion-badge">✓ Completed</div>
                 </div>
-                <div class="completion-badge">✓ Completed</div>
+                <div class="step-content">
+                    Connect with our community for updates and support
+                </div>
+                <div class="step-actions">
+                    <button class="circle-btn" id="joinBtn">Join</button>
+                    <button class="circle-btn skip" onclick="skipStep(1)">Skip</button>
+                </div>
             </div>
-            <div class="step-content">
-                Share your experience (optional)
-            </div>
-            <div class="step-actions">
-                <input type="text" class="step-input" id="feedbackInput" placeholder="Your feedback...">
-                <button class="circle-btn submit" id="submitBtn">✓</button>
-                <button class="circle-btn skip" onclick="skipStep(2)">Skip</button>
+            
+            <div class="auth-step" id="step2">
+                <div class="step-header">
+                    <div class="step-title-wrapper">
+                        <div class="step-number">2</div>
+                        <div class="step-title">Rate Our Service!</div>
+                    </div>
+                    <div class="completion-badge">✓ Completed</div>
+                </div>
+                <div class="step-content">
+                    Share your experience (optional)<br>
+                    <small style="color: #888; font-size: 0.9em;">Feedback will be sent to 2435053202@qq.com</small>
+                </div>
+                <div class="step-actions">
+                    <input type="text" class="step-input" id="feedbackInput" placeholder="Your feedback...">
+                    <button class="circle-btn submit" id="submitBtn">✓</button>
+                    <button class="circle-btn skip" onclick="skipStep(2)">Skip</button>
+                </div>
             </div>
         </div>
         
@@ -430,20 +516,58 @@
         const feedbackInput = document.getElementById('feedbackInput');
         const progress1 = document.getElementById('progress1');
         const progress2 = document.getElementById('progress2');
+        const sliderContainer = document.getElementById('sliderContainer');
+        const sliderHint = document.getElementById('sliderHint');
         
         // Step completion states
         let step1Completed = localStorage.getItem('step1Completed') === 'true';
         let step2Completed = localStorage.getItem('step2Completed') === 'true';
         
-        // Initialize UI
+        // 初始化UI
         function initializeUI() {
             updateStepUI(1, step1Completed);
             updateStepUI(2, step2Completed);
             updateProgressIndicator();
             updateGetKeyButton();
+            setupSlider();
         }
         
-        // Update step UI based on completion
+        // 设置滑块
+        function setupSlider() {
+            // 检测是否为横屏
+            function checkOrientation() {
+                const isLandscape = window.innerWidth > window.innerHeight;
+                const isSmallHeight = window.innerHeight < 600;
+                
+                if ((isLandscape && isSmallHeight) || window.innerHeight < 500) {
+                    sliderHint.style.display = 'block';
+                    sliderContainer.style.maxHeight = '250px';
+                } else {
+                    sliderHint.style.display = 'none';
+                    sliderContainer.style.maxHeight = 'none';
+                }
+            }
+            
+            // 初始检查
+            checkOrientation();
+            
+            // 监听窗口大小变化
+            window.addEventListener('resize', checkOrientation);
+            
+            // 监听滚动事件
+            sliderContainer.addEventListener('scroll', function() {
+                const scrollPercentage = (sliderContainer.scrollTop / (sliderContainer.scrollHeight - sliderContainer.clientHeight)) * 100;
+                
+                // 如果滚动到底部，隐藏提示
+                if (scrollPercentage > 80) {
+                    sliderHint.style.opacity = '0.3';
+                } else {
+                    sliderHint.style.opacity = '1';
+                }
+            });
+        }
+        
+        // 更新步骤UI
         function updateStepUI(stepNumber, completed) {
             const stepElement = document.getElementById(`step${stepNumber}`);
             const progressDot = document.getElementById(`progress${stepNumber}`);
@@ -466,20 +590,18 @@
                 }
             }
             
-            // Update progress dot
             progressDot.classList.toggle('active', !completed);
         }
         
-        // Update progress indicator
+        // 更新进度指示器
         function updateProgressIndicator() {
             const completedSteps = [step1Completed, step2Completed].filter(Boolean).length;
             
-            // Show completion progress
             progress1.classList.toggle('active', !step1Completed);
             progress2.classList.toggle('active', !step2Completed && step1Completed);
         }
         
-        // Update Get Key button state
+        // 更新获取密钥按钮
         function updateGetKeyButton() {
             const allStepsCompleted = step1Completed && step2Completed;
             getKeyBtn.disabled = !allStepsCompleted;
@@ -492,7 +614,7 @@
             }
         }
         
-        // Mark step as completed
+        // 完成步骤
         function completeStep(stepNumber) {
             if (stepNumber === 1) {
                 step1Completed = true;
@@ -506,19 +628,17 @@
             updateProgressIndicator();
             updateGetKeyButton();
             
-            // Show success notification
             showNotification(`Step ${stepNumber} completed!`, 'success');
         }
         
-        // Skip a step
+        // 跳过步骤
         function skipStep(stepNumber) {
             completeStep(stepNumber);
             showNotification(`Step ${stepNumber} skipped`, 'info');
         }
         
-        // Show notification
+        // 显示通知
         function showNotification(message, type = 'info') {
-            // Create notification element
             const notification = document.createElement('div');
             notification.className = `notification ${type}`;
             notification.innerHTML = `
@@ -540,7 +660,6 @@
             
             document.body.appendChild(notification);
             
-            // Remove after 3 seconds
             setTimeout(() => {
                 notification.style.animation = 'slideOut 0.3s ease';
                 setTimeout(() => {
@@ -549,7 +668,7 @@
             }, 3000);
         }
         
-        // Add CSS for notifications
+        // 添加CSS动画
         const style = document.createElement('style');
         style.textContent = `
             @keyframes slideIn {
@@ -563,65 +682,79 @@
         `;
         document.head.appendChild(style);
         
-        // Join Discord button
+        // 加入Discord按钮
         joinBtn.addEventListener('click', function() {
-            // Open Discord invite
             window.open('https://discord.com/invite/BWcHXTujG8', '_blank');
             
-            // Mark as completed after a delay (simulating user action)
             setTimeout(() => {
                 completeStep(1);
                 showNotification('Discord joined! Step 1 completed.', 'success');
             }, 1000);
         });
         
-        // Submit feedback button
+        // 提交反馈按钮
         submitBtn.addEventListener('click', function() {
             const feedback = feedbackInput.value.trim();
             
             if (feedback.length > 0) {
-                // Here you would normally send the feedback to your server
-                // For now, we'll simulate sending
+                // 发送反馈到API
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = '⏳';
                 
-                // Simulate API call
-                setTimeout(() => {
-                    // Send feedback to server (example)
-                    // fetch('/api/submit-feedback', {
-                    //     method: 'POST',
-                    //     headers: { 'Content-Type': 'application/json' },
-                    //     body: JSON.stringify({ feedback: feedback })
-                    // })
-                    // .then(response => response.json())
-                    // .then(data => {
-                    //     if (data.success) {
-                    //         completeStep(2);
-                    //         showNotification('Feedback submitted! Thank you.', 'success');
-                    //     }
-                    // });
-                    
-                    // Simulate success
-                    completeStep(2);
-                    showNotification('Feedback submitted! Thank you.', 'success');
-                    
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = '✓';
-                    feedbackInput.value = '';
-                }, 1500);
+                // 发送到您的邮箱API
+                sendFeedbackToEmail(feedback)
+                    .then(response => {
+                        if (response.success) {
+                            completeStep(2);
+                            showNotification('Feedback submitted and sent to email! Thank you.', 'success');
+                        } else {
+                            throw new Error(response.message || 'Submission failed');
+                        }
+                    })
+                    .catch(error => {
+                        showNotification('Failed to send feedback: ' + error.message, 'error');
+                    })
+                    .finally(() => {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = '✓';
+                        feedbackInput.value = '';
+                    });
             } else {
                 showNotification('Please enter some feedback', 'error');
             }
         });
         
-        // Allow pressing Enter to submit feedback
+        // 发送反馈到邮箱API
+        async function sendFeedbackToEmail(feedback) {
+            try {
+                const response = await fetch('/api/send-feedback', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        feedback: feedback,
+                        timestamp: new Date().toISOString(),
+                        userAgent: navigator.userAgent,
+                        referrer: document.referrer
+                    })
+                });
+                
+                return await response.json();
+            } catch (error) {
+                console.error('Error sending feedback:', error);
+                throw error;
+            }
+        }
+        
+        // 按Enter提交反馈
         feedbackInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 submitBtn.click();
             }
         });
         
-        // Proceed to key page
+        // 跳转到密钥页面
         function proceedToKey() {
             if (step1Completed && step2Completed) {
                 window.location.href = 'key.html';
@@ -630,13 +763,7 @@
             }
         }
         
-        // Auto-skip after 5 seconds (for testing)
-        // setTimeout(() => {
-        //     if (!step1Completed) skipStep(1);
-        //     if (!step2Completed) skipStep(2);
-        // }, 5000);
-        
-        // Initialize
+        // 初始化
         document.addEventListener('DOMContentLoaded', initializeUI);
     </script>
 </body>
