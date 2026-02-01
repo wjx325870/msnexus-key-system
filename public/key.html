@@ -5,19 +5,364 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your License Key | Ms-Nexus</title>
     <style>
-        /* [保持原有的所有CSS样式不变] */
-        /* 只更新年份显示 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(100, 80, 255, 0.2) 0%, transparent 20%),
+                radial-gradient(circle at 80% 70%, rgba(255, 100, 100, 0.15) 0%, transparent 20%),
+                radial-gradient(circle at 40% 80%, rgba(100, 200, 255, 0.1) 0%, transparent 20%),
+                linear-gradient(135deg, #0a0e2a 0%, #1a1b3a 50%, #0c0f2a 100%);
+            min-height: 100vh;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+                radial-gradient(2px 2px at 40px 70px, #fff, transparent),
+                radial-gradient(1px 1px at 90px 40px, #ddd, transparent),
+                radial-gradient(1px 1px at 130px 80px, #fff, transparent),
+                radial-gradient(2px 2px at 160px 120px, #eee, transparent);
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            z-index: 0;
+            animation: twinkle 5s infinite alternate;
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.8; }
+        }
+        
+        .container {
+            background: rgba(15, 20, 45, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(100, 120, 255, 0.2);
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+        
+        .logo-container {
+            margin-bottom: 30px;
+        }
+        
+        .logo-img {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #6c8cff, #4a6fff);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 0 20px rgba(108, 140, 255, 0.5);
+        }
+        
+        h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #6c8cff, #b0c6ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            color: #aaa;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+        
+        .key-display-container {
+            background: rgba(30, 35, 70, 0.7);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px dashed rgba(108, 140, 255, 0.3);
+            position: relative;
+        }
+        
+        .key-label {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            color: #b0c6ff;
+        }
+        
+        .license-key {
+            font-size: 1.8em;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #4CAF50;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            word-break: break-all;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            user-select: all;
+        }
+        
+        .license-key:hover {
+            background: rgba(0, 0, 0, 0.5);
+            transform: scale(1.02);
+        }
+        
+        .copy-btn {
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            max-width: 200px;
+            margin: 0 auto;
+            display: block;
+        }
+        
+        .copy-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(33, 150, 243, 0.4);
+        }
+        
+        .copy-btn.copied {
+            background: linear-gradient(135deg, #4CAF50, #2E8B57);
+        }
+        
+        .key-info {
+            margin-top: 20px;
+            color: #888;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+        
+        .validity-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .info-item {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .info-label {
+            font-size: 0.8em;
+            color: #aaa;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            font-size: 1.1em;
+            color: #fff;
+            font-weight: bold;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+            justify-content: center;
+        }
+        
+        .action-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #aaa;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 25px;
+            border-radius: 20px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+        
+        .action-btn.discord {
+            background: rgba(88, 101, 242, 0.2);
+            color: #b9bbbe;
+        }
+        
+        .action-btn.discord:hover {
+            background: rgba(88, 101, 242, 0.4);
+            color: #fff;
+        }
+        
+        .note-section {
+            margin-top: 25px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            color: #aaa;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+        
+        .note-section a {
+            color: #6c8cff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .note-section a:hover {
+            text-decoration: underline;
+        }
         
         .footer {
             margin-top: 20px;
             color: #666;
             font-size: 0.85em;
         }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(76, 175, 80, 0.9);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .license-key {
+                font-size: 1.4em;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            
+            .action-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .validity-info {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- [保持原有的所有HTML内容不变] -->
+        <div class="logo-container">
+            <div class="logo-img">M</div>
+            <h1>Your License Key</h1>
+            <p class="subtitle">Copy your key to activate Ms-Nexus</p>
+        </div>
+        
+        <div class="key-display-container">
+            <div class="key-label">Your License Key:</div>
+            <div class="license-key" id="licenseKey" onclick="selectLicenseKey()">Generating...</div>
+            
+            <div class="key-info">
+                This key is valid for <strong>23 hours</strong> from generation.<br>
+                Keep it safe and do not share with others.
+            </div>
+            
+            <div class="validity-info">
+                <div class="info-item">
+                    <div class="info-label">Generated</div>
+                    <div class="info-value" id="generatedTime">Just now</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Expires in</div>
+                    <div class="info-value" id="expiresIn">23:00:00</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Status</div>
+                    <div class="info-value" id="keyStatus">Active</div>
+                </div>
+            </div>
+        </div>
+        
+        <button class="copy-btn" onclick="copyLicenseKey()" id="copyButton">Copy Key</button>
+        
+        <div class="actions">
+            <button class="action-btn" onclick="generateNewKey()">
+                <span style="font-size: 1.2em;">🔄</span> Generate New Key
+            </button>
+            <button class="action-btn discord" onclick="openDiscord()">
+                <span style="font-size: 1.2em;">💬</span> Join Discord
+            </button>
+            <button class="action-btn" onclick="goBack()">
+                <span style="font-size: 1.2em;">←</span> Back
+            </button>
+        </div>
+        
+        <div class="note-section">
+            <strong>Important Information:</strong><br>
+            • This script currently only supports Delta Injector<br>
+            • <a href="https://discord.com/invite/BWcHXTujG8" target="_blank">Join our Discord for support and updates 🙏</a><br>
+            • Key will be automatically saved to your account
+        </div>
         
         <div class="footer">
             © 2026 Ms-Nexus System | Secure License Management
@@ -25,7 +370,253 @@
     </div>
 
     <script>
-        // [保持原有的所有JavaScript代码不变]
+        // Function to generate a license key
+        function generateLicenseKey() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let key = 'MSNX-';
+            for (let i = 0; i < 12; i++) {
+                key += chars.charAt(Math.floor(Math.random() * chars.length));
+                if ((i + 1) % 4 === 0 && i !== 11) key += '-';
+            }
+            return key;
+        }
+        
+        // Function to format time
+        function formatTime(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        // Function to update expiry timer
+        function updateExpiryTimer(expiryTimestamp) {
+            const now = Math.floor(Date.now() / 1000);
+            const remaining = expiryTimestamp - now;
+            
+            if (remaining > 0) {
+                document.getElementById('expiresIn').textContent = formatTime(remaining);
+                
+                // Update status based on remaining time
+                const hours = Math.floor(remaining / 3600);
+                if (hours < 1) {
+                    document.getElementById('keyStatus').textContent = 'Expiring Soon';
+                    document.getElementById('keyStatus').style.color = '#FF9800';
+                } else {
+                    document.getElementById('keyStatus').textContent = 'Active';
+                    document.getElementById('keyStatus').style.color = '#4CAF50';
+                }
+            } else {
+                document.getElementById('expiresIn').textContent = '00:00:00';
+                document.getElementById('keyStatus').textContent = 'Expired';
+                document.getElementById('keyStatus').style.color = '#f44336';
+            }
+        }
+        
+        // Function to show notification
+        function showNotification(message, type = 'success') {
+            // Remove existing notification
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+            
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.style.background = type === 'success' ? 'rgba(76, 175, 80, 0.9)' : 
+                                           type === 'error' ? 'rgba(244, 67, 54, 0.9)' : 
+                                           'rgba(33, 150, 243, 0.9)';
+            
+            const icon = type === 'success' ? '✓' : type === 'error' ? '✗' : 'ℹ️';
+            notification.innerHTML = `<span style="font-size: 1.2em;">${icon}</span> ${message}`;
+            
+            document.body.appendChild(notification);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 300);
+            }, 3000);
+        }
+        
+        // Function to copy license key to clipboard
+        function copyLicenseKey() {
+            const keyText = document.getElementById('licenseKey').textContent;
+            const copyButton = document.getElementById('copyButton');
+            
+            // Don't copy if still generating
+            if (keyText === 'Generating...') {
+                showNotification('Please wait for key generation', 'error');
+                return;
+            }
+            
+            navigator.clipboard.writeText(keyText).then(() => {
+                // Visual feedback
+                const originalText = copyButton.textContent;
+                copyButton.textContent = '✓ Copied!';
+                copyButton.classList.add('copied');
+                
+                showNotification('License key copied to clipboard!', 'success');
+                
+                setTimeout(() => {
+                    copyButton.textContent = originalText;
+                    copyButton.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Copy failed:', err);
+                
+                // Fallback method
+                const textArea = document.createElement('textarea');
+                textArea.value = keyText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                showNotification('Key copied (fallback method)', 'success');
+            });
+        }
+        
+        // Function to select license key text
+        function selectLicenseKey() {
+            const keyElement = document.getElementById('licenseKey');
+            const range = document.createRange();
+            range.selectNodeContents(keyElement);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            
+            showNotification('Key selected, ready to copy', 'info');
+        }
+        
+        // Function to generate new key
+        async function generateNewKey() {
+            const keyElement = document.getElementById('licenseKey');
+            const copyButton = document.getElementById('copyButton');
+            const generatedTimeElement = document.getElementById('generatedTime');
+            
+            // Show generating state
+            keyElement.textContent = 'Generating...';
+            copyButton.disabled = true;
+            copyButton.textContent = '⏳ Generating...';
+            
+            try {
+                // Call API to generate new key
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ source: 'web_page' })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Update key display
+                    keyElement.textContent = result.data.licenseKey;
+                    
+                    // Update generation time
+                    const now = new Date();
+                    generatedTimeElement.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    
+                    // Set expiry time (23 hours from now)
+                    const expiryTimestamp = Math.floor(Date.now() / 1000) + (23 * 60 * 60);
+                    
+                    // Start countdown timer
+                    if (window.expiryTimer) clearInterval(window.expiryTimer);
+                    window.expiryTimer = setInterval(() => {
+                        updateExpiryTimer(expiryTimestamp);
+                    }, 1000);
+                    
+                    // Initial update
+                    updateExpiryTimer(expiryTimestamp);
+                    
+                    showNotification('New license key generated successfully!', 'success');
+                    
+                    // Save to localStorage for demo purposes
+                    localStorage.setItem('msnexus_last_key', result.data.licenseKey);
+                    localStorage.setItem('msnexus_key_generated', now.toISOString());
+                    
+                } else {
+                    throw new Error(result.message);
+                }
+            } catch (error) {
+                console.error('Generate error:', error);
+                
+                // Fallback: generate a demo key
+                const demoKey = generateLicenseKey();
+                keyElement.textContent = demoKey;
+                
+                const now = new Date();
+                generatedTimeElement.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                const expiryTimestamp = Math.floor(Date.now() / 1000) + (23 * 60 * 60);
+                
+                // Start countdown timer
+                if (window.expiryTimer) clearInterval(window.expiryTimer);
+                window.expiryTimer = setInterval(() => {
+                    updateExpiryTimer(expiryTimestamp);
+                }, 1000);
+                
+                updateExpiryTimer(expiryTimestamp);
+                
+                showNotification('Demo key generated (offline mode)', 'info');
+                
+                // Save to localStorage
+                localStorage.setItem('msnexus_last_key', demoKey);
+                localStorage.setItem('msnexus_key_generated', now.toISOString());
+            } finally {
+                copyButton.disabled = false;
+                copyButton.textContent = 'Copy Key';
+            }
+        }
+        
+        // Function to open Discord
+        function openDiscord() {
+            window.open('https://discord.com/invite/BWcHXTujG8', '_blank');
+            showNotification('Opening Discord invite...', 'info');
+        }
+        
+        // Function to go back
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check for saved key in localStorage
+            const savedKey = localStorage.getItem('msnexus_last_key');
+            const savedTime = localStorage.getItem('msnexus_key_generated');
+            
+            if (savedKey && savedTime) {
+                // Load saved key
+                document.getElementById('licenseKey').textContent = savedKey;
+                document.getElementById('generatedTime').textContent = new Date(savedTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                // Calculate expiry (23 hours from saved time)
+                const savedTimestamp = Math.floor(new Date(savedTime).getTime() / 1000);
+                const expiryTimestamp = savedTimestamp + (23 * 60 * 60);
+                
+                // Start countdown timer
+                window.expiryTimer = setInterval(() => {
+                    updateExpiryTimer(expiryTimestamp);
+                }, 1000);
+                
+                // Initial update
+                updateExpiryTimer(expiryTimestamp);
+                
+                showNotification('Loaded saved license key', 'info');
+            } else {
+                // Generate a new key on load
+                generateNewKey();
+            }
+            
+            // Add click-to-copy on the key display
+            document.getElementById('licenseKey').addEventListener('click', selectLicenseKey);
+        });
     </script>
 </body>
 </html>
