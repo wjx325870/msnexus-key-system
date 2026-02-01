@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View License - Ms-Nexus</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(100, 80, 255, 0.2) 0%, transparent 20%),
+                radial-gradient(circle at 80% 70%, rgba(255, 100, 100, 0.15) 0%, transparent 20%),
+                radial-gradient(circle at 40% 80%, rgba(100, 200, 255, 0.1) 0%, transparent 20%),
+                linear-gradient(135deg, #0a0e2a 0%, #1a1b3a 50%, #0c0f2a 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+                radial-gradient(2px 2px at 40px 70px, #fff, transparent),
+                radial-gradient(1px 1px at 90px 40px, #ddd, transparent),
+                radial-gradient(1px 1px at 130px 80px, #fff, transparent),
+                radial-gradient(2px 2px at 160px 120px, #eee, transparent);
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            z-index: 0;
+            animation: twinkle 5s infinite alternate;
+            pointer-events: none;
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.8; }
+        }
+        
+        .container {
+            background: rgba(15, 20, 45, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(100, 120, 255, 0.3);
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+        
+        .logo-img {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #6c8cff, #4a6fff);
+            border-radius: 50%;
+            margin: 0 auto 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 0 30px rgba(108, 140, 255, 0.5);
+            animation: pulse 3s infinite alternate;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 20px rgba(108, 140, 255, 0.5); }
+            100% { box-shadow: 0 0 40px rgba(108, 140, 255, 0.8); }
+        }
+        
+        h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #6c8cff, #b0c6ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            color: #aaa;
+            margin-bottom: 30px;
+            font-size: 1em;
+        }
+        
+        .license-display {
+            background: rgba(30, 35, 70, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            border: 2px solid rgba(108, 140, 255, 0.3);
+            text-align: center;
+        }
+        
+        .license-title {
+            color: #6c8cff;
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .license-key-box {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            border: 2px dashed rgba(108, 140, 255, 0.5);
+            font-family: 'Courier New', monospace;
+            font-size: 1.5em;
+            color: #fff;
+            letter-spacing: 3px;
+            word-break: break-all;
+            position: relative;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(108, 140, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            transition: all 0.3s;
+        }
+        
+        .copy-btn:hover {
+            background: rgba(108, 140, 255, 0.4);
+            transform: scale(1.1);
+        }
+        
+        .license-info {
+            margin-top: 25px;
+            text-align: left;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .info-label {
+            color: #aaa;
+            font-weight: bold;
+        }
+        
+        .info-value {
+            color: #fff;
+            font-weight: bold;
+        }
+        
+        .status-active {
+            color: #4CAF50;
+        }
+        
+        .status-expired {
+            color: #FF5722;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 15px 20px;
+            border-radius: 25px;
+            border: none;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .action-btn.primary {
+            background: linear-gradient(135deg, #6c8cff, #4a6fff);
+            color: white;
+        }
+        
+        .action-btn.primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(108, 140, 255, 0.4);
+        }
+        
+        .action-btn.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(108, 140, 255, 0.5);
+        }
+        
+        .action-btn.secondary:hover {
+            background: rgba(108, 140, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        .no-license {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 25px 0;
+            color: #aaa;
+            font-size: 1.1em;
+        }
+        
+        .create-btn {
+            background: linear-gradient(135deg, #4CAF50, #2E8B57);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 25px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin: 20px 0;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+        }
+        
+        .create-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(76, 175, 80, 0.4);
+        }
+        
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(108, 140, 255, 0.5);
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            transition: all 0.3s;
+        }
+        
+        .back-btn:hover {
+            background: rgba(108, 140, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .footer {
+            margin-top: 30px;
+            color: #888;
+            font-size: 0.8em;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 1.7em;
+            }
+            
+            .logo-img {
+                width: 80px;
+                height: 80px;
+                font-size: 30px;
+            }
+            
+            .license-key-box {
+                font-size: 1.2em;
+                padding: 20px;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-img">M</div>
+        
+        <h1>MS-NEXUS - VIEW LICENSE</h1>
+        <p class="subtitle">Your current active license key</p>
+        
+        <div id="licenseContent">
+            <!-- 卡密信息将动态加载在这里 -->
+            <div class="license-display">
+                <div class="license-title">Your License Key</div>
+                <div class="license-key-box" id="licenseKeyBox">
+                    <span id="licenseKeyText">Loading...</span>
+                    <button class="copy-btn" onclick="copyLicenseKey()" title="Copy to clipboard">
+                        📋
+                    </button>
+                </div>
+                
+                <div class="license-info">
+                    <div class="info-row">
+                        <span class="info-label">Status:</span>
+                        <span class="info-value status-active" id="licenseStatus">Active</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Generated:</span>
+                        <span class="info-value" id="generatedDate">2026-01-15</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Expires:</span>
+                        <span class="info-value" id="expiryDate">2026-02-15</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Days Left:</span>
+                        <span class="info-value" id="daysLeft">30 days</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="actions">
+                <button class="action-btn primary" onclick="checkLicenseValidity()">
+                    ✅ Check Validity
+                </button>
+                <button class="action-btn secondary" onclick="renewLicense()">
+                    🔄 Renew License
+                </button>
+            </div>
+        </div>
+        
+        <div id="noLicenseContent" style="display: none;">
+            <div class="no-license">
+                <p style="font-size: 1.3em; margin-bottom: 15px;">⚠️ No Active License Found</p>
+                <p>You don't have an active license key yet.</p>
+                <p style="margin-top: 20px;">? No license key? Create one!</p>
+            </div>
+            
+            <button class="create-btn" onclick="createNewLicense()">
+                🎫 Create New License Key
+            </button>
+        </div>
+        
+        <button class="back-btn" onclick="goBack()">
+            ↩ Back to Main Page
+        </button>
+        
+        <div class="footer">
+            2026 | MSNEXUS TEAM
+        </div>
+    </div>
+
+    <script>
+        // 获取用户ID（假设存储在localStorage中）
+        function getUserId() {
+            let userId = localStorage.getItem('msnexus_user_id');
+            if (!userId) {
+                // 创建新的用户ID
+                userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('msnexus_user_id', userId);
+            }
+            return userId;
+        }
+        
+        // 加载用户的卡密信息
+        async function loadLicenseInfo() {
+            const userId = getUserId();
+            const licenseContent = document.getElementById('licenseContent');
+            const noLicenseContent = document.getElementById('noLicenseContent');
+            
+            try {
+                // 这里应该调用您的API来获取用户卡密
+                // 暂时使用演示数据
+                const hasLicense = true; // 假设用户有卡密
+                
+                if (hasLicense) {
+                    licenseContent.style.display = 'block';
+                    noLicenseContent.style.display = 'none';
+                    
+                    // 演示数据 - 在实际应用中应从API获取
+                    const licenseData = {
+                        key: 'MSN-2026-X8B7-C3F9-A2E5-D4G1',
+                        status: 'active',
+                        generated: '2026-01-15',
+                        expires: '2026-02-15',
+                        daysLeft: 30
+                    };
+                    
+                    document.getElementById('licenseKeyText').textContent = licenseData.key;
+                    document.getElementById('licenseStatus').textContent = licenseData.status;
+                    document.getElementById('generatedDate').textContent = licenseData.generated;
+                    document.getElementById('expiryDate').textContent = licenseData.expires;
+                    document.getElementById('daysLeft').textContent = `${licenseData.daysLeft} days`;
+                    
+                    // 根据状态设置颜色
+                    const statusElement = document.getElementById('licenseStatus');
+                    if (licenseData.status === 'active') {
+                        statusElement.className = 'info-value status-active';
+                    } else if (licenseData.status === 'expired') {
+                        statusElement.className = 'info-value status-expired';
+                    }
+                } else {
+                    licenseContent.style.display = 'none';
+                    noLicenseContent.style.display = 'block';
+                }
+                
+            } catch (error) {
+                console.error('Error loading license:', error);
+                // 显示错误状态
+                licenseContent.style.display = 'none';
+                noLicenseContent.style.display = 'block';
+            }
+        }
+        
+        // 复制卡密到剪贴板
+        function copyLicenseKey() {
+            const licenseKey = document.getElementById('licenseKeyText').textContent;
+            
+            if (licenseKey && licenseKey !== 'Loading...') {
+                navigator.clipboard.writeText(licenseKey).then(() => {
+                    showNotification('License key copied to clipboard!', 'success');
+                }).catch(err => {
+                    // 备用方法
+                    const textArea = document.createElement('textarea');
+                    textArea.value = licenseKey;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    showNotification('License key copied!', 'success');
+                });
+            }
+        }
+        
+        // 检查卡密有效性
+        function checkLicenseValidity() {
+            showNotification('Checking license validity...', 'info');
+            // 这里应该调用API检查卡密
+            setTimeout(() => {
+                showNotification('✅ License is valid and active!', 'success');
+            }, 1000);
+        }
+        
+        // 续订卡密
+        function renewLicense() {
+            if (confirm('Do you want to renew your license? This may require additional verification.')) {
+                showNotification('Redirecting to renewal page...', 'info');
+                // 这里可以跳转到续订页面
+                setTimeout(() => {
+                    window.location.href = 'renew-license.html';
+                }, 1500);
+            }
+        }
+        
+        // 创建新卡密
+        function createNewLicense() {
+            window.location.href = 'key.html';
+        }
+        
+        // 返回主页面
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+        
+        // 显示通知
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div style="
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: ${type === 'success' ? 'rgba(76, 175, 80, 0.9)' : type === 'error' ? 'rgba(244, 67, 54, 0.9)' : 'rgba(33, 150, 243, 0.9)'};
+                    color: white;
+                    padding: 15px 20px;
+                    border-radius: 10px;
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                    z-index: 1000;
+                    animation: slideIn 0.3s ease;
+                ">
+                    ${message}
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+        
+        // 添加CSS动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // 页面加载时加载卡密信息
+        document.addEventListener('DOMContentLoaded', loadLicenseInfo);
+    </script>
+</body>
+</html>
