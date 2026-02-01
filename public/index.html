@@ -107,15 +107,20 @@
             margin-bottom: 25px;
             text-align: left;
             border-left: 4px solid #6c8cff;
+            position: relative;
+            transition: all 0.3s ease;
         }
         
-        .step-title {
+        .auth-step.completed {
+            border-left-color: #4CAF50;
+            background: rgba(30, 70, 50, 0.7);
+        }
+        
+        .step-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
-            font-size: 1.1em;
-            font-weight: bold;
         }
         
         .step-number {
@@ -128,17 +133,60 @@
             align-items: center;
             justify-content: center;
             font-weight: bold;
+            font-size: 16px;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .auth-step.completed .step-number {
+            background: #4CAF50;
+        }
+        
+        .step-title-wrapper {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+        
+        .step-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin: 0;
+            line-height: 1.2;
+        }
+        
+        .completion-badge {
+            background: #4CAF50;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            display: none;
+            align-items: center;
+            gap: 5px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .auth-step.completed .completion-badge {
+            display: inline-flex;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .step-content {
             margin-bottom: 15px;
             color: #ccc;
+            padding-left: 45px; /* Align with step number */
         }
         
         .step-actions {
             display: flex;
             gap: 10px;
             margin-top: 15px;
+            padding-left: 45px; /* Align with step number */
         }
         
         .step-input {
@@ -177,6 +225,10 @@
             box-shadow: 0 0 20px rgba(108, 140, 255, 0.5);
         }
         
+        .circle-btn.completed {
+            background: linear-gradient(135deg, #4CAF50, #2E8B57);
+        }
+        
         .circle-btn.skip {
             background: rgba(255, 255, 255, 0.1);
             color: #aaa;
@@ -184,6 +236,14 @@
         
         .circle-btn.skip:hover {
             background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .circle-btn.submit {
+            background: linear-gradient(135deg, #FF9800, #FF5722);
+        }
+        
+        .circle-btn.submit:hover {
+            box-shadow: 0 0 20px rgba(255, 152, 0, 0.5);
         }
         
         .main-btn {
@@ -206,6 +266,13 @@
             box-shadow: 0 10px 25px rgba(76, 175, 80, 0.4);
         }
         
+        .main-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
         .note-section {
             margin-top: 25px;
             padding: 15px;
@@ -226,19 +293,28 @@
             text-decoration: underline;
         }
         
-        .view-keys-link {
-            margin-top: 20px;
-            text-align: center;
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
         }
         
-        .view-keys-link a {
-            color: #6c8cff;
-            text-decoration: none;
-            font-size: 0.9em;
+        .progress-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
         }
         
-        .view-keys-link a:hover {
-            text-decoration: underline;
+        .progress-dot.active {
+            background: #6c8cff;
+            transform: scale(1.2);
+        }
+        
+        .progress-dot.completed {
+            background: #4CAF50;
         }
         
         .footer {
@@ -265,6 +341,21 @@
                 border-radius: 25px;
                 height: 45px;
             }
+            
+            .step-content,
+            .step-actions {
+                padding-left: 0;
+            }
+            
+            .step-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .completion-badge {
+                align-self: flex-start;
+            }
         }
     </style>
 </head>
@@ -276,91 +367,277 @@
             <p class="subtitle">Complete steps to get your license key</p>
         </div>
         
-        <div class="auth-step">
-            <div class="step-title">
-                <div class="step-number">1</div>
-                <span>Join Discord Community</span>
+        <div class="progress-indicator">
+            <div class="progress-dot" id="progress1"></div>
+            <div class="progress-dot" id="progress2"></div>
+        </div>
+        
+        <div class="auth-step" id="step1">
+            <div class="step-header">
+                <div class="step-title-wrapper">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Join Discord Community</div>
+                </div>
+                <div class="completion-badge">✓ Completed</div>
             </div>
             <div class="step-content">
                 Connect with our community for updates and support
             </div>
             <div class="step-actions">
-                <button class="circle-btn" id="joinDiscordBtn">Join</button>
+                <button class="circle-btn" id="joinBtn">Join</button>
                 <button class="circle-btn skip" onclick="skipStep(1)">Skip</button>
             </div>
         </div>
         
-        <div class="auth-step">
-            <div class="step-title">
-                <div class="step-number">2</div>
-                <span>Rate Our Service!</span>
+        <div class="auth-step" id="step2">
+            <div class="step-header">
+                <div class="step-title-wrapper">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Rate Our Service!</div>
+                </div>
+                <div class="completion-badge">✓ Completed</div>
             </div>
             <div class="step-content">
                 Share your experience (optional)
             </div>
             <div class="step-actions">
                 <input type="text" class="step-input" id="feedbackInput" placeholder="Your feedback...">
+                <button class="circle-btn submit" id="submitBtn">✓</button>
                 <button class="circle-btn skip" onclick="skipStep(2)">Skip</button>
             </div>
         </div>
         
-        <button class="main-btn" onclick="proceedToKey()">Get License Key!</button>
+        <button class="main-btn" id="getKeyBtn" disabled onclick="proceedToKey()">Get License Key!</button>
         
         <div class="note-section">
             <strong>Important Notes:</strong><br>
             • This script currently only supports Delta Injector<br>
-            • <a href="https://discord.com/invite/BWcHXTujG8" target="_blank" id="discordLink">Join our Discord to help us improve 🙏</a>
-        </div>
-        
-        <div class="view-keys-link">
-            <a href="/all-keys.html">📋 View All Generated Keys</a>
+            • <a href="https://discord.com/invite/BWcHXTujG8" target="_blank">Join our Discord to help us improve 🙏</a>
         </div>
         
         <div class="footer">
-            © 2024 Ms-Nexus System | Secure License Management
+            © 2026 Ms-Nexus System | Secure License Management
         </div>
     </div>
 
     <script>
-        // Discord链接
-        const DISCORD_INVITE = 'https://discord.com/invite/BWcHXTujG8';
-        
-        // 元素
-        const joinDiscordBtn = document.getElementById('joinDiscordBtn');
-        const discordLink = document.getElementById('discordLink');
+        // DOM Elements
+        const step1Element = document.getElementById('step1');
+        const step2Element = document.getElementById('step2');
+        const joinBtn = document.getElementById('joinBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const getKeyBtn = document.getElementById('getKeyBtn');
         const feedbackInput = document.getElementById('feedbackInput');
+        const progress1 = document.getElementById('progress1');
+        const progress2 = document.getElementById('progress2');
         
-        // 设置Discord链接
-        discordLink.href = DISCORD_INVITE;
+        // Step completion states
+        let step1Completed = localStorage.getItem('step1Completed') === 'true';
+        let step2Completed = localStorage.getItem('step2Completed') === 'true';
         
-        // 加入Discord按钮事件
-        joinDiscordBtn.addEventListener('click', function() {
-            window.open(DISCORD_INVITE, '_blank');
-        });
-        
-        // 跳过步骤
-        function skipStep(stepNumber) {
-            console.log(`Step ${stepNumber} skipped`);
-            // 可以在这里添加跳过逻辑，如标记步骤已完成
+        // Initialize UI
+        function initializeUI() {
+            updateStepUI(1, step1Completed);
+            updateStepUI(2, step2Completed);
+            updateProgressIndicator();
+            updateGetKeyButton();
         }
         
-        // 前往卡密页面
-        function proceedToKey() {
-            // 检查是否提供了反馈（可选）
-            const feedback = feedbackInput.value.trim();
-            if (feedback) {
-                console.log('User feedback:', feedback);
-                // 这里可以发送反馈到服务器
+        // Update step UI based on completion
+        function updateStepUI(stepNumber, completed) {
+            const stepElement = document.getElementById(`step${stepNumber}`);
+            const progressDot = document.getElementById(`progress${stepNumber}`);
+            
+            if (completed) {
+                stepElement.classList.add('completed');
+                progressDot.classList.add('completed');
+                
+                if (stepNumber === 1) {
+                    joinBtn.classList.add('completed');
+                    joinBtn.innerHTML = '✓';
+                }
+            } else {
+                stepElement.classList.remove('completed');
+                progressDot.classList.remove('completed');
+                
+                if (stepNumber === 1) {
+                    joinBtn.classList.remove('completed');
+                    joinBtn.innerHTML = 'Join';
+                }
             }
             
-            // 重定向到卡密页面
-            window.location.href = 'key.html';
+            // Update progress dot
+            progressDot.classList.toggle('active', !completed);
         }
         
-        // 页面加载完成后
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('Ms-Nexus Authentication page loaded');
+        // Update progress indicator
+        function updateProgressIndicator() {
+            const completedSteps = [step1Completed, step2Completed].filter(Boolean).length;
+            
+            // Show completion progress
+            progress1.classList.toggle('active', !step1Completed);
+            progress2.classList.toggle('active', !step2Completed && step1Completed);
+        }
+        
+        // Update Get Key button state
+        function updateGetKeyButton() {
+            const allStepsCompleted = step1Completed && step2Completed;
+            getKeyBtn.disabled = !allStepsCompleted;
+            
+            if (allStepsCompleted) {
+                getKeyBtn.innerHTML = '🎉 Get License Key!';
+            } else {
+                const completedCount = [step1Completed, step2Completed].filter(Boolean).length;
+                getKeyBtn.innerHTML = `Complete ${completedCount}/2 Steps`;
+            }
+        }
+        
+        // Mark step as completed
+        function completeStep(stepNumber) {
+            if (stepNumber === 1) {
+                step1Completed = true;
+                localStorage.setItem('step1Completed', 'true');
+            } else if (stepNumber === 2) {
+                step2Completed = true;
+                localStorage.setItem('step2Completed', 'true');
+            }
+            
+            updateStepUI(stepNumber, true);
+            updateProgressIndicator();
+            updateGetKeyButton();
+            
+            // Show success notification
+            showNotification(`Step ${stepNumber} completed!`, 'success');
+        }
+        
+        // Skip a step
+        function skipStep(stepNumber) {
+            completeStep(stepNumber);
+            showNotification(`Step ${stepNumber} skipped`, 'info');
+        }
+        
+        // Show notification
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div style="
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: ${type === 'success' ? 'rgba(76, 175, 80, 0.9)' : type === 'error' ? 'rgba(244, 67, 54, 0.9)' : 'rgba(33, 150, 243, 0.9)'};
+                    color: white;
+                    padding: 15px 20px;
+                    border-radius: 10px;
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                    z-index: 1000;
+                    animation: slideIn 0.3s ease;
+                ">
+                    ${message}
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+        
+        // Add CSS for notifications
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Join Discord button
+        joinBtn.addEventListener('click', function() {
+            // Open Discord invite
+            window.open('https://discord.com/invite/BWcHXTujG8', '_blank');
+            
+            // Mark as completed after a delay (simulating user action)
+            setTimeout(() => {
+                completeStep(1);
+                showNotification('Discord joined! Step 1 completed.', 'success');
+            }, 1000);
         });
+        
+        // Submit feedback button
+        submitBtn.addEventListener('click', function() {
+            const feedback = feedbackInput.value.trim();
+            
+            if (feedback.length > 0) {
+                // Here you would normally send the feedback to your server
+                // For now, we'll simulate sending
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '⏳';
+                
+                // Simulate API call
+                setTimeout(() => {
+                    // Send feedback to server (example)
+                    // fetch('/api/submit-feedback', {
+                    //     method: 'POST',
+                    //     headers: { 'Content-Type': 'application/json' },
+                    //     body: JSON.stringify({ feedback: feedback })
+                    // })
+                    // .then(response => response.json())
+                    // .then(data => {
+                    //     if (data.success) {
+                    //         completeStep(2);
+                    //         showNotification('Feedback submitted! Thank you.', 'success');
+                    //     }
+                    // });
+                    
+                    // Simulate success
+                    completeStep(2);
+                    showNotification('Feedback submitted! Thank you.', 'success');
+                    
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '✓';
+                    feedbackInput.value = '';
+                }, 1500);
+            } else {
+                showNotification('Please enter some feedback', 'error');
+            }
+        });
+        
+        // Allow pressing Enter to submit feedback
+        feedbackInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                submitBtn.click();
+            }
+        });
+        
+        // Proceed to key page
+        function proceedToKey() {
+            if (step1Completed && step2Completed) {
+                window.location.href = 'key.html';
+            } else {
+                showNotification('Please complete all steps first', 'error');
+            }
+        }
+        
+        // Auto-skip after 5 seconds (for testing)
+        // setTimeout(() => {
+        //     if (!step1Completed) skipStep(1);
+        //     if (!step2Completed) skipStep(2);
+        // }, 5000);
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', initializeUI);
     </script>
 </body>
 </html>
