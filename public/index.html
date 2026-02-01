@@ -5,9 +5,273 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ms-Nexus License Authentication</title>
     <style>
-        /* ... [保持您所有的现有CSS样式不变] ... */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
         
-        /* 新添加的样式：查看卡密按钮 */
+        body {
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(100, 80, 255, 0.2) 0%, transparent 20%),
+                radial-gradient(circle at 80% 70%, rgba(255, 100, 100, 0.15) 0%, transparent 20%),
+                radial-gradient(circle at 40% 80%, rgba(100, 200, 255, 0.1) 0%, transparent 20%),
+                linear-gradient(135deg, #0a0e2a 0%, #1a1b3a 50%, #0c0f2a 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 20px;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+                radial-gradient(2px 2px at 40px 70px, #fff, transparent),
+                radial-gradient(1px 1px at 90px 40px, #ddd, transparent),
+                radial-gradient(1px 1px at 130px 80px, #fff, transparent),
+                radial-gradient(2px 2px at 160px 120px, #eee, transparent);
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            z-index: 0;
+            animation: twinkle 5s infinite alternate;
+            pointer-events: none;
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.8; }
+        }
+        
+        .container {
+            background: rgba(15, 20, 45, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            margin: 0 auto;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(100, 120, 255, 0.2);
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+        
+        .logo-container {
+            margin-bottom: 20px;
+        }
+        
+        .logo-img {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #6c8cff, #4a6fff);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 0 20px rgba(108, 140, 255, 0.5);
+        }
+        
+        h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #6c8cff, #b0c6ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            color: #aaa;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+        
+        .auth-step {
+            background: rgba(30, 35, 70, 0.7);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: left;
+            border-left: 4px solid #6c8cff;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .auth-step.completed {
+            border-left-color: #4CAF50;
+            background: rgba(30, 70, 50, 0.7);
+        }
+        
+        .step-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .step-number {
+            background: #6c8cff;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .auth-step.completed .step-number {
+            background: #4CAF50;
+        }
+        
+        .step-title-wrapper {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+        
+        .step-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin: 0;
+            line-height: 1.2;
+        }
+        
+        .completion-badge {
+            background: #4CAF50;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            display: none;
+            align-items: center;
+            gap: 5px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .auth-step.completed .completion-badge {
+            display: inline-flex;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .step-content {
+            margin-bottom: 15px;
+            color: #ccc;
+            padding-left: 45px;
+        }
+        
+        .step-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            padding-left: 45px;
+        }
+        
+        .step-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(108, 140, 255, 0.3);
+            border-radius: 25px;
+            padding: 12px 20px;
+            color: white;
+            font-size: 1em;
+        }
+        
+        .step-input:focus {
+            outline: none;
+            border-color: #6c8cff;
+        }
+        
+        .circle-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #6c8cff, #4a6fff);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            transition: all 0.3s;
+        }
+        
+        .circle-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(108, 140, 255, 0.5);
+        }
+        
+        .circle-btn.completed {
+            background: linear-gradient(135deg, #4CAF50, #2E8B57);
+        }
+        
+        .circle-btn.skip {
+            background: rgba(255, 255, 255, 0.1);
+            color: #aaa;
+        }
+        
+        .circle-btn.skip:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .circle-btn.submit {
+            background: linear-gradient(135deg, #FF9800, #FF5722);
+        }
+        
+        .circle-btn.submit:hover {
+            box-shadow: 0 0 20px rgba(255, 152, 0, 0.5);
+        }
+        
+        .main-btn {
+            background: linear-gradient(135deg, #4CAF50, #2E8B57);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 25px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+        }
+        
+        .main-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(76, 175, 80, 0.4);
+        }
+        
+        .main-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* 新增：查看卡密按钮 */
         .view-btn {
             background: linear-gradient(135deg, #6c8cff, #4a6fff);
             color: white;
@@ -21,10 +285,6 @@
             margin-top: 15px;
             transition: all 0.3s;
             letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
         }
         
         .view-btn:hover {
@@ -32,15 +292,132 @@
             box-shadow: 0 10px 25px rgba(108, 140, 255, 0.4);
         }
         
-        .view-btn:disabled {
-            background: #666;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
+        .note-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            color: #aaa;
+            font-size: 0.9em;
+            line-height: 1.6;
         }
         
-        .button-group {
-            margin-top: 20px;
+        .note-section a {
+            color: #6c8cff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .note-section a:hover {
+            text-decoration: underline;
+        }
+        
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 10px 0 30px 0;
+        }
+        
+        .progress-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+        }
+        
+        .progress-dot.active {
+            background: #6c8cff;
+            transform: scale(1.2);
+        }
+        
+        .progress-dot.completed {
+            background: #4CAF50;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.85em;
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .step-actions {
+                flex-direction: column;
+            }
+            
+            .circle-btn {
+                width: 100%;
+                border-radius: 25px;
+                height: 45px;
+            }
+            
+            .step-content,
+            .step-actions {
+                padding-left: 0;
+            }
+            
+            .step-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .completion-badge {
+                align-self: flex-start;
+            }
+        }
+        
+        .scroll-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #6c8cff;
+            font-size: 0.9em;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            z-index: 100;
+        }
+        
+        .scroll-indicator.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .scroll-indicator-arrow {
+            width: 30px;
+            height: 30px;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        html {
+            scroll-behavior: smooth;
         }
     </style>
 </head>
@@ -93,22 +470,24 @@
             </div>
         </div>
         
-        <!-- 按钮组：包含两个按钮 -->
-        <div class="button-group">
-            <button class="main-btn" id="getKeyBtn" disabled onclick="proceedToKey()">Get License Key!</button>
-            <!-- 新添加的查看卡密按钮 -->
-            <button class="view-btn" id="viewKeyBtn" onclick="viewMyLicense()">
-                🔍 View My License
-            </button>
-        </div>
+        <!-- 原始UI：只有一个Get License Key按钮 -->
+        <button class="main-btn" id="getKeyBtn" disabled onclick="proceedToKey()">Get License Key!</button>
+        
+        <!-- 新增：View My License按钮 -->
+        <button class="view-btn" onclick="viewMyLicense()">
+            🔍 View My License
+        </button>
         
         <div class="note-section">
             <strong>Important Notes:</strong><br>
             • This script currently only supports Delta Injector<br>
             • <a href="https://discord.com/invite/BWcHXTujG8" target="_blank">Join our Discord to help us improve 🙏</a><br><br>
             
-            <div class="license-link" onclick="goToFindLicense()">
-                🔍 Already have a license key? Find it!
+            <!-- 这个链接可以保留，但不再是主要按钮 -->
+            <div style="text-align: center; margin-top: 10px;">
+                <a href="find-license.html" style="color: #6c8cff; text-decoration: none;">
+                    🔍 Already have a license key? Find it!
+                </a>
             </div>
         </div>
         
@@ -130,7 +509,6 @@
         const joinBtn = document.getElementById('joinBtn');
         const submitBtn = document.getElementById('submitBtn');
         const getKeyBtn = document.getElementById('getKeyBtn');
-        const viewKeyBtn = document.getElementById('viewKeyBtn'); // 新按钮
         const feedbackInput = document.getElementById('feedbackInput');
         const progress1 = document.getElementById('progress1');
         const progress2 = document.getElementById('progress2');
@@ -318,7 +696,6 @@
             }
         });
         
-        // 跳转到生成卡密页面
         function proceedToKey() {
             if (step1Completed && step2Completed) {
                 window.location.href = 'key.html';
@@ -327,20 +704,10 @@
             }
         }
         
-        // 新功能：查看我的卡密
+        // 新增：跳转到查看卡密页面
         function viewMyLicense() {
-            // 检查用户是否已完成步骤（可选）
-            if (!step1Completed || !step2Completed) {
-                showNotification('Please complete the steps first', 'info');
-                return;
-            }
-            
             // 跳转到查看卡密页面
             window.location.href = 'view-license.html';
-        }
-        
-        function goToFindLicense() {
-            window.location.href = 'find-license.html';
         }
         
         document.addEventListener('DOMContentLoaded', initializeUI);
